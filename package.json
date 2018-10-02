@@ -1,0 +1,26 @@
+{
+  "name": "kitchat",
+  "version": "0.0.1",
+  "description": "chat server powered by socketio AND graphql",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragma/KitChat.git"
+  },
+  "keywords": [
+    "chat",
+    "graphql",
+    "socketio",
+    "mongodb"
+  ],
+  "author": "Florent Béjina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dragma/KitChat/issues"
+  },
+  "homepage": "https://github.com/dragma/KitChat#readme",
+  "private": true
+}
