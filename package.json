@@ -28,7 +28,9 @@
   "homepage": "https://github.com/dragma/KitChat#readme",
   "private": true,
   "dependencies": {
-    "concurrently": "4.0.1"
+    "bluebird": "3.5.2",
+    "concurrently": "4.0.1",
+    "mongoose": "5.3.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
