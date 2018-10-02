@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/.bin/babel src -d dist",
-    "build:watch": "node_modules/.bin/babel src -d dist --watch"
+    "build": "./node_modules/.bin/babel src -d dist",
+    "build:watch": "./node_modules/.bin/babel src -d dist --watch",
+    "start:dev": "./node_modules/.bin/nodemon dist/index.js",
+    "dev": "./node_modules/.bin/concurrently -n build,server \" yarn build:watch\" \"yarn start:dev\""
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,9 @@
   },
   "homepage": "https://github.com/dragma/KitChat#readme",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "concurrently": "4.0.1"
+  },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
@@ -34,6 +38,7 @@
     "babel-preset-env": "1.7.0",
     "eslint": "5.6.1",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "2.14.0"
+    "eslint-plugin-import": "2.14.0",
+    "nodemon": "1.18.4"
   }
 }
