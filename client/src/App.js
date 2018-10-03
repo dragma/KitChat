@@ -9,8 +9,13 @@ class App extends Component {
     this.state = {
       socketUrl: 'http://localhost:8080',
       connected: false,
-      socketQuery: '{ "access_token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJraXRjaGF0X3VzZXJfaWQiOiIxMjM0NTY3ODkwIn0.PNLW7ht_xvTTmNKVo7lwVaEteKXSCSXQxHTpoG2_SVk" }',
+      socketQuery: null,
+      updateUserData: '{ "firstname": "Florent", "lastname": "Béjina" }'
     };
+  }
+
+  componentDidMount() {
+    this.useId();
   }
 
   changeState(key, value) {
@@ -29,6 +34,17 @@ class App extends Component {
     this.socket.on('connected', () => this.changeState('connected', true));
     this.socket.on('disconnect', () => this.changeState('connected', false));
     this.socket.on('created', data => console.log('CREATED', data))
+    this.socket.on('user_updated', data => console.log('USER UPDATED', data))
+  }
+
+  updateUser() {
+    let userData = null;
+    try {
+      userData = JSON.parse(this.state.updateUserData);
+    } catch(e) {
+      alert('invalid json');
+    }
+    this.socket.emit('update_user', userData)
   }
 
   connect() {
@@ -41,6 +57,7 @@ class App extends Component {
     this.socket = io(this.state.socketUrl, { query: socketQuery });
     this.initiateSocket();
   }
+  
 
   disconnect() {
     this.socket.disconnect();
@@ -51,6 +68,7 @@ class App extends Component {
     return (
       <div>
         <p>
+          <h2>Connexion</h2>
           Connexion URL : <br />
           <input 
             type="text" 
@@ -62,7 +80,7 @@ class App extends Component {
           <button onClick={() => this.useId()}>Use internal ID</button>
           <button onClick={() => this.useKitChatId()}>Use kitchat ID</button><br />
           <textarea 
-            style={{ width: 500, height: 300 }}
+            style={{ width: 500, height: 150 }}
             value={this.state.socketQuery}
             onChange={e => this.changeState('socketQuery', e.target.value)}
           /><br />
@@ -70,10 +88,16 @@ class App extends Component {
           {this.state.connected && <button onClick={() => this.disconnect()}>Déconnection</button>}
         </p>
         <p>
+          <h2>Update values</h2>
+          <textarea 
+            style={{ width: 500, height: 150 }}
+            value={this.state.updateUserData}
+            onChange={e => this.changeState('updateUserData', e.target.value)}
+          /><br />
           <button
-
+            onClick={() => this.updateUser()}
           >
-            Send Create user
+            Send update user
           </button>
         </p>
       </div>

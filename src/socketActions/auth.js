@@ -18,7 +18,6 @@ const auth = async (socket, next) => {
           userData.secondary_id = data.user_id;
         }
         user = await User.create(userData);
-        console.log('CREATED', { kitchat_user_id: user._id });
         socket.emit('created', { kitchat_user_id: user._id });
       }
       if (user) {
@@ -30,6 +29,7 @@ const auth = async (socket, next) => {
       console.warn('[ERROR] Error during auth :', err.message);
     }
   }
+
   next();
 };
 

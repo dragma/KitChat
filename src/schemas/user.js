@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 const UserSchema = new Schema({
   created_at: { type: Date, required: true, default: Date.now },
   secondary_id: { type: String, index: true },
+  nickname: String,
   firstname: String,
   lastname: String,
 });
