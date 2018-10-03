@@ -14,6 +14,7 @@ class UserActions extends Component {
       secret: 'shhhh',
       other_user_id: '',
       rooms: [],
+      activeRoomId: null,
     };
   }
 
@@ -43,6 +44,10 @@ class UserActions extends Component {
       console.log('ON GET ROOMS', rooms);
       this.setState({ rooms });
     });
+    this.socket.on('get_room', room => {
+      console.log('ON GET ROOM', room);
+      this.setState({ currentRoom: room })
+    })
   }
 
   updateUser() {
@@ -59,6 +64,10 @@ class UserActions extends Component {
     this.socket.emit('create_room', {
       user_id: this.state.other_user_id,
     });
+  }
+
+  selectRoom(roomId) {
+    this.setState({ activeRoomId: roomId }, () => this.socket.emit('get_room', { room_id: roomId }))
   }
 
   async connect() {
@@ -96,7 +105,7 @@ class UserActions extends Component {
           {this.state.connected && <button onClick={() => this.disconnect()}>Déconnection</button>}
         </div>
         <div>
-          <h2>Update values</h2>
+          <h2>Update user values</h2>
           <textarea 
             style={{ width: 500, height: 50 }}
             value={this.state.updateUserData}
@@ -122,12 +131,13 @@ class UserActions extends Component {
         </div>
         <div>
           <h2>Rooms List</h2>
+          Select room :
           <ul>
             {this.state.rooms.map(room => (
-              <li>
-                {room.room_id}
+              <li key={room.room_id}>
+                <button onClick={() => this.selectRoom(room.room_id)}>{room.room_id}</button>
                 <ul>
-                  {room.users.map(u => <li>{u.user_id}</li>)}
+                  {room.users.map(u => <li key={u.user_id}>{u.user_id}</li>)}
                 </ul>
               </li>
             ))}

@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 const RoomSchema = new Schema({
   created_at: { type: Date, required: true, default: Date.now },
   users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message', index: true }],
 });
 
 

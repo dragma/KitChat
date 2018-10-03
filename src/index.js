@@ -9,6 +9,7 @@ import auth from './socketActions/auth';
 import updateUser from './socketActions/updateUser';
 import createRoom from './socketActions/createRoom';
 import getRooms from './socketActions/getRooms';
+import getRoom from './socketActions/getRoom';
 
 import SocketManager from './utils/SocketManager';
 
@@ -48,7 +49,10 @@ io.on('connection', (socket) => {
   // on create room
   socket.on('create_room', createRoom(socket));
 
-  // on create room
+  // on get room
+  socket.on('get_room', getRoom(socket));
+
+  // on get rooms
   socket.on('get_rooms', getRooms(socket));
 
   // user disconnects
