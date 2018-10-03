@@ -7,6 +7,8 @@ import { Server } from 'http';
 import { MONGO_URI, APP_PORT } from './config';
 import auth from './socketActions/auth';
 import updateUser from './socketActions/updateUser';
+import createRoom from './socketActions/createRoom';
+
 import SocketManager from './utils/SocketManager';
 
 // mogoose setup
@@ -41,6 +43,9 @@ io.on('connection', (socket) => {
 
   // on user update
   socket.on('update_user', updateUser(socket));
+
+  // on create room
+  socket.on('create_room', createRoom(socket));
 
   // user disconnects
   socket.on('disconnect', () => {
