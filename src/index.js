@@ -30,16 +30,15 @@ io.use(auth);
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
-  if (!socket.user) {
-    console.log('No auth. Disconnecting.');
-    return socket.disconnect(true);
-  }
   SocketManager.addSocket(socket);
 
+  // send connected event
   socket.emit('connected');
+
   // user disconnects
   socket.on('disconnect', () => {
     SocketManager.deleteSocket(socket);
     console.log('a user disconnected, removing it form clients list');
+    socket.disconnect(true);
   });
 });
