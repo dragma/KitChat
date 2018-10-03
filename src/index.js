@@ -8,6 +8,7 @@ import { MONGO_URI, APP_PORT } from './config';
 import auth from './socketActions/auth';
 import updateUser from './socketActions/updateUser';
 import createRoom from './socketActions/createRoom';
+import getRooms from './socketActions/getRooms';
 
 import SocketManager from './utils/SocketManager';
 
@@ -46,6 +47,9 @@ io.on('connection', (socket) => {
 
   // on create room
   socket.on('create_room', createRoom(socket));
+
+  // on create room
+  socket.on('get_rooms', getRooms(socket));
 
   // user disconnects
   socket.on('disconnect', () => {

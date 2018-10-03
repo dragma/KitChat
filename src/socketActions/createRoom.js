@@ -17,9 +17,18 @@ const createRoom = socket => async (data) => {
     }
   }
 
-  const room = await Room.create(roomData);
+  const rooms = await Room.getByUserId(roomData.users);
 
-  SocketManager.getSocketsByUserId(socket.user._id).forEach(s => s.emit('room_created', room));
+  let newRoom = null;
+  if (!rooms.length) {
+    newRoom = await Room.create(roomData);
+  } else {
+    [newRoom] = rooms;
+  }
+
+  SocketManager
+    .getSocketsByUserIds(newRoom.users)
+    .forEach(s => s.emit('room_created', newRoom));
 };
 
 export default createRoom;

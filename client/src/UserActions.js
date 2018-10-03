@@ -13,6 +13,7 @@ class UserActions extends Component {
       updateUserData: '{ "firstname": "Florent", "lastname": "Béjina" }',
       secret: 'shhhh',
       other_user_id: '',
+      rooms: [],
     };
   }
 
@@ -37,7 +38,11 @@ class UserActions extends Component {
     this.socket.on('disconnect', () => this.changeState('connected', false));
     this.socket.on('created', data => console.log('CREATED', data))
     this.socket.on('user_updated', data => console.log('USER UPDATED', data));
-    this.socket.on('room_created', data => console.log('ROOM CREATED', data));
+    this.socket.on('room_created', () => this.socket.emit('get_rooms'));
+    this.socket.on('get_rooms', rooms => {
+      console.log('ON GET ROOMS', rooms);
+      this.setState({ rooms });
+    });
   }
 
   updateUser() {
@@ -60,6 +65,7 @@ class UserActions extends Component {
     const access_token = await jwt.sign({ user_id: this.state.user_id }, this.state.secret);
     this.socket = io(this.state.socketUrl, { query: { access_token } });
     this.initiateSocket();
+    this.socket.emit('get_rooms');
   }
   
   disconnect() {
@@ -113,6 +119,19 @@ class UserActions extends Component {
           >
             Create room
           </button>
+        </div>
+        <div>
+          <h2>Rooms List</h2>
+          <ul>
+            {this.state.rooms.map(room => (
+              <li>
+                {room.room_id}
+                <ul>
+                  {room.users.map(u => <li>{u.user_id}</li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     );
