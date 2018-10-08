@@ -87,7 +87,10 @@ class UserActions extends Component {
   }
 
   selectRoom(roomId) {
-    const callback = () => this.socket.emit('set_active_room', { room_id: roomId });
+    const callback = () => {
+      this.socket.emit('set_active_room', { room_id: roomId })
+      this.socket.emit('set_last_read', { room_id: roomId })
+    };
     this.setState({ activeRoomId: roomId }, callback)
   }
 
@@ -176,6 +179,7 @@ class UserActions extends Component {
             {this.state.rooms.map(room => (
               <li key={room.room_id}>
                 <button onClick={() => this.selectRoom(room.room_id)}>{room.room_id}</button>
+                {!room.read && <b> - non lu</b>}
                 <ul>
                   {room.users.map(u => <li key={u.user_id}>{u.user_id}</li>)}
                 </ul>

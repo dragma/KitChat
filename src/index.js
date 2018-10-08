@@ -13,6 +13,7 @@ import getRoom from './socketActions/getRoom';
 import setActiveRoom from './socketActions/setActiveRoom';
 import sendTyping from './socketActions/sendTyping';
 import addMessage from './socketActions/addMessage';
+import setLastRead from './socketActions/setLastRead';
 
 import SocketManager from './utils/SocketManager';
 
@@ -66,6 +67,9 @@ io.on('connection', (socket) => {
 
   // on receive message
   socket.on('add_message', addMessage(socket));
+
+  // on set last read
+  socket.on('set_last_read', setLastRead(socket));
 
   // user disconnects
   socket.on('disconnect', () => {

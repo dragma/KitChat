@@ -2,8 +2,8 @@ import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
 import formatRoom from '../utils/formatRoom';
 
-const getRooms = socket => async (data) => {
-  console.log('[EVENT] on get_rooms', data);
+const getRooms = socket => async () => {
+  console.log('[EVENT] on get_rooms');
 
   const rooms = await Room
     .getByUserId(socket.user._id)

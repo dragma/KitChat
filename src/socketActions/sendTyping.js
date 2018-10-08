@@ -2,12 +2,13 @@ import SocketManager from '../utils/SocketManager';
 
 const timeouts = {};
 
-const manageTyping = (socket, room_id) => {
+const manageTyping = (socket) => {
   socket.emit('typing', true);
-  if (timeouts[room_id]) {
-    clearTimeout(timeouts[room_id]);
+  if (timeouts[socket.id]) {
+    clearTimeout(timeouts[socket.id]);
   }
-  timeouts[room_id] = setTimeout(() => socket.emit('typing', false), 5000);
+
+  timeouts[socket.id] = setTimeout(() => socket.emit('typing', false), 5000);
 };
 
 const sendTyping = socket => async () => {
@@ -15,8 +16,8 @@ const sendTyping = socket => async () => {
   const sockets = SocketManager.getSocketsByRoomId(room_id);
 
   sockets
-    .filter(s => s.id !== socket.id)
-    .forEach(s => manageTyping(s, room_id));
+    .filter(s => s.user._id !== socket.user._id)
+    .forEach(s => manageTyping(s));
 };
 
 export default sendTyping;

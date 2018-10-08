@@ -92,7 +92,7 @@ class SocketManager {
   }
 
   getSocketsByUserId(userId) {
-    const socketsIds = this.users[userId];
+    const socketsIds = this.users[userId] || [];
     return socketsIds.map(id => this.sockets[id]);
   }
 
@@ -100,7 +100,7 @@ class SocketManager {
     if (!ids || !Array.isArray(ids)) {
       return [];
     }
-    return ids.map(id => this.getSocketsByUserId(id))
+    return [...ids].map(id => this.getSocketsByUserId(id))
       .reduce((acc, sockets) => [...acc, ...sockets], []);
   }
 

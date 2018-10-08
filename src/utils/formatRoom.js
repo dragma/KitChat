@@ -13,7 +13,7 @@ const formatRoom = async (room, user_id, options = {}) => {
   let messagesIds = [];
 
   if (options && options.nb_messages) {
-    messagesIds = formatedRoom.messages.slice().slice(0, options.nb_messages);
+    messagesIds = formatedRoom.messages.reverse().slice(0, options.nb_messages);
   } else {
     messagesIds = formatedRoom.messages;
   }
@@ -21,7 +21,7 @@ const formatRoom = async (room, user_id, options = {}) => {
   const messagesToLoadLength = messagesIds.length;
 
   const messages = await Message.getByIds(messagesIds)
-    .then(msgs => Promise.all(msgs.map(msg => formatMessage(msg))));
+    .then(msgs => Promise.all(msgs.reverse().map(msg => formatMessage(msg))));
   const users = await User.getByIds(room.users)
     .then(usrs => Promise.all(usrs.map(u => formatUser(u))));
   formatedRoom.users = users;
@@ -30,7 +30,9 @@ const formatRoom = async (room, user_id, options = {}) => {
   formatedRoom.allMessagesLoaded = messagesToLoadLength === allMessagesLength;
 
   let read = false;
-  if (room.last_read_at && messages.length) {
+  if (!messages.length) {
+    read = true;
+  } else if (room.last_read_at) {
     if (room.last_read_at[user_id]) {
       const lastRead = +moment(new Date(room.last_read_at[user_id]));
       const lastMessageDate = +moment(new Date(messages[0].created_at));

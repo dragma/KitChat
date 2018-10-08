@@ -23,6 +23,7 @@ const auth = async (socket, next) => {
       if (user) {
         socket.user = {
           ...user,
+          _id: user._id.toString(),
         };
       }
     } catch (err) {
