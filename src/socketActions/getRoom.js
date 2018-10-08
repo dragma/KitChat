@@ -9,7 +9,11 @@ const getRooms = socket => async (data) => {
 
   const room = await Room.getById(room_id);
 
-  const formatedRoom = await formatRoom(room, { nb_messages: data.nb_messages || 1 });
+  const formatedRoom = await formatRoom(
+    room,
+    socket.user._id,
+    { nb_messages: data.nb_messages || 1 },
+  );
 
   socket.emit('get_room', formatedRoom);
 };

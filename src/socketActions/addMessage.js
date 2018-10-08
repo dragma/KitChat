@@ -15,7 +15,9 @@ const addMessage = socket => async (data) => {
     user_id: socket.user._id,
   });
 
-  const room = await Room.getById(data.room_id).then(rawRoom => formatRoom(rawRoom));
+  const room = await Room
+    .getById(data.room_id)
+    .then(rawRoom => formatRoom(rawRoom, socket.user._id));
 
   SocketManager
     .getSocketsByRoomId(data.room_id)

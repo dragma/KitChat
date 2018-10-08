@@ -1,7 +1,7 @@
 import User from '../data/user';
 import formatUser from './formatUser';
 
-const formatRoom = async (message) => {
+const formatMessage = async (message) => {
   const formatedMessage = Object.assign(message);
 
   formatedMessage.message_id = message._id;
@@ -20,4 +20,4 @@ const formatRoom = async (message) => {
   };
 };
 
-export default formatRoom;
+export default formatMessage;

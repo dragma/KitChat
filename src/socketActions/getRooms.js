@@ -7,7 +7,7 @@ const getRooms = socket => async (data) => {
 
   const rooms = await Room
     .getByUserId(socket.user._id)
-    .then(rms => Promise.all(rms.map(r => formatRoom(r, { nb_messages: 1 }))));
+    .then(rms => Promise.all(rms.map(r => formatRoom(r, socket.user._id, { nb_messages: 1 }))));
 
   SocketManager
     .getSocketsByUserId(socket.user._id)
