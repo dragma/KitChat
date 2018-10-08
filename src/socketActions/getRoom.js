@@ -5,13 +5,13 @@ import formatRoom from '../utils/formatRoom';
 const getRooms = socket => async (data) => {
   console.log('[EVENT] on get_room', data);
 
-  const room = await Room.getById(data.room_id);
+  const room_id = SocketManager.getRoomIdBySocket(socket);
 
-  const formatedRoom = await formatRoom(room);
+  const room = await Room.getById(room_id);
 
-  SocketManager
-    .getSocketsByUserId(socket.user._id)
-    .forEach(s => s.emit('get_room', formatedRoom));
+  const formatedRoom = await formatRoom(room, { nb_messages: data.nb_messages || 1 });
+
+  socket.emit('get_room', formatedRoom);
 };
 
 export default getRooms;

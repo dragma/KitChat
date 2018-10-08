@@ -17,6 +17,7 @@ class UserActions extends Component {
       activeRoomId: null,
       message: '',
       isTyping: false,
+      roomNbMessage: 10,
     };
   }
 
@@ -42,6 +43,10 @@ class UserActions extends Component {
     this.socket.on('created', data => console.log('CREATED', data))
     this.socket.on('user_updated', data => console.log('USER UPDATED', data));
     this.socket.on('room_created', () => this.socket.emit('get_rooms'));
+    this.socket.on('set_active_room', () => {
+      console.log('ON SET ACTIVE ROOM');
+      this.socket.emit('get_room', { nb_messages: 10 });
+    })
     this.socket.on('message_sent', () => {
       console.log('ON MESSAGE SENT');
       this.setState({ message : '' })
@@ -82,7 +87,8 @@ class UserActions extends Component {
   }
 
   selectRoom(roomId) {
-    this.setState({ activeRoomId: roomId }, () => this.socket.emit('set_active_room', { room_id: roomId }))
+    const callback = () => this.socket.emit('set_active_room', { room_id: roomId });
+    this.setState({ activeRoomId: roomId }, callback)
   }
 
   async connect() {
@@ -104,6 +110,16 @@ class UserActions extends Component {
   
   sendMessage() {
     this.socket.emit('add_message', { room_id: this.state.activeRoomId, message: this.state.message })
+  }
+
+  getCurrentRoom() {
+    console.log('getCurrentRoom')
+    this.socket.emit('get_room', { nb_messages: this.state.roomNbMessage });
+  }
+
+  incrRoomLimitMessage() {
+    const callback = () => this.socket.emit('get_room', { nb_messages : this.state.roomNbMessage })
+    this.setState({ roomNbMessage: this.state.roomNbMessage + 10 }, callback)
   }
 
   render() {
@@ -187,6 +203,13 @@ class UserActions extends Component {
                     {msg.message} - <i>{msg.user.firstname}</i>
                   </li>
                 ))
+            }
+            {
+              this.state.currentRoom 
+              && !this.state.currentRoom.allMessagesLoaded
+              && <button
+                onClick={() => this.incrRoomLimitMessage()}
+              >See more...</button> 
             }
           </ul>
         </div>

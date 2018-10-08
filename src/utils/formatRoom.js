@@ -10,11 +10,13 @@ const formatRoom = async (room, options = {}) => {
 
   let messagesIds = [];
 
-  if (options && options.nbMessages) {
-    messagesIds = formatedRoom.messages.slice(0, options.nbMessages);
+  if (options && options.nb_messages) {
+    messagesIds = formatedRoom.messages.slice().slice(0, options.nb_messages);
   } else {
     messagesIds = formatedRoom.messages;
   }
+  const allMessagesLength = formatedRoom.messages.length;
+  const messagesToLoadLength = messagesIds.length;
 
   const messages = await Message.getByIds(messagesIds)
     .then(msgs => Promise.all(msgs.map(msg => formatMessage(msg))));
@@ -22,6 +24,8 @@ const formatRoom = async (room, options = {}) => {
     .then(usrs => Promise.all(usrs.map(u => formatUser(u))));
   formatedRoom.users = users;
   formatedRoom.messages = messages;
+
+  formatedRoom.allMessagesLoaded = messagesToLoadLength === allMessagesLength;
 
   delete room.__v;
   delete room._id;
