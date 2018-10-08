@@ -42,6 +42,10 @@ class UserActions extends Component {
     this.socket.on('created', data => console.log('CREATED', data))
     this.socket.on('user_updated', data => console.log('USER UPDATED', data));
     this.socket.on('room_created', () => this.socket.emit('get_rooms'));
+    this.socket.on('message_sent', () => {
+      console.log('ON MESSAGE SENT');
+      this.setState({ message : '' })
+    });
     this.socket.on('reconnect', () => {
       console.log('ON RECONNECT');
       if (this.state.activeRoomId) {
@@ -98,6 +102,10 @@ class UserActions extends Component {
     this.setState({ message })
   }
   
+  sendMessage() {
+    this.socket.emit('add_message', { room_id: this.state.activeRoomId, message: this.state.message })
+  }
+
   render() {
     return (
       <div>
@@ -167,8 +175,20 @@ class UserActions extends Component {
               onChange={e => this.onMessageUpade(e.target.value)}
               value={this.state.message}
             /><br />
-            <button>Send Message</button>
+            <button onClick={() => this.sendMessage()}>Send Message</button>
           </div>
+          <ul>
+            {
+              this.state.currentRoom 
+              && this.state.currentRoom.messages
+              && this.state.currentRoom.messages
+                .map(msg => (
+                  <li key={msg.message_id}>
+                    {msg.message} - <i>{msg.user.firstname}</i>
+                  </li>
+                ))
+            }
+          </ul>
         </div>
       </div>
     );
