@@ -112,7 +112,7 @@ class SocketManager {
     if (!this.socketsByRoom[roomId]) {
       return [];
     }
-    return this.socketsByRoom[roomId];
+    return this.socketsByRoom[roomId].map(socketId => this.sockets[socketId]);
   }
 
   getRoomIdBySocket(socket) {
@@ -121,9 +121,6 @@ class SocketManager {
 
   setActiveRoom(socket, roomId) {
     this._registerActiveRoom(socket, roomId);
-    console.log('NEW ROOM SET');
-    console.log(this.socketsByRoom);
-    console.log(this.roomBySocket);
     return this;
   }
 }

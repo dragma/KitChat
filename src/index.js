@@ -11,6 +11,7 @@ import createRoom from './socketActions/createRoom';
 import getRooms from './socketActions/getRooms';
 import getRoom from './socketActions/getRoom';
 import setActiveRoom from './socketActions/setActiveRoom';
+import sendTyping from './socketActions/sendTyping';
 
 import SocketManager from './utils/SocketManager';
 
@@ -58,6 +59,9 @@ io.on('connection', (socket) => {
 
   // on get rooms
   socket.on('set_active_room', setActiveRoom(socket));
+
+  // on typing
+  socket.on('typing', sendTyping(socket));
 
   // user disconnects
   socket.on('disconnect', () => {

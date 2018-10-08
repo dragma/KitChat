@@ -15,6 +15,8 @@ class UserActions extends Component {
       other_user_id: '',
       rooms: [],
       activeRoomId: null,
+      message: '',
+      isTyping: false,
     };
   }
 
@@ -40,6 +42,16 @@ class UserActions extends Component {
     this.socket.on('created', data => console.log('CREATED', data))
     this.socket.on('user_updated', data => console.log('USER UPDATED', data));
     this.socket.on('room_created', () => this.socket.emit('get_rooms'));
+    this.socket.on('reconnect', () => {
+      console.log('ON RECONNECT');
+      if (this.state.activeRoomId) {
+        this.socket.emit('set_active_room', { room_id: this.state.activeRoomId })
+      }
+    })
+    this.socket.on('typing', isTyping => {
+      console.log('IS TYPING', isTyping);
+      this.setState({ isTyping });
+    })
     this.socket.on('get_rooms', rooms => {
       console.log('ON GET ROOMS', rooms);
       this.setState({ rooms });
@@ -79,6 +91,11 @@ class UserActions extends Component {
   disconnect() {
     this.socket.disconnect();
     this.setState({ connected: false });
+  }
+
+  onMessageUpade(message) {
+    this.socket.emit('typing', { room_id: this.state.activeRoomId })
+    this.setState({ message })
   }
   
   render() {
@@ -141,6 +158,17 @@ class UserActions extends Component {
               </li>
             ))}
           </ul>
+        </div>
+        <div>
+          <h2>Room data <small>{this.state.activeRoomId}</small></h2>
+          <div>
+            {this.state.isTyping && <span>Typing...<br /></span>}
+            <textarea 
+              onChange={e => this.onMessageUpade(e.target.value)}
+              value={this.state.message}
+            /><br />
+            <button>Send Message</button>
+          </div>
         </div>
       </div>
     );
