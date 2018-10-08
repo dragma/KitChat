@@ -51,13 +51,12 @@ class UserActions extends Component {
   }
 
   updateUser() {
-    let userData = null;
     try {
-      userData = JSON.parse(this.state.updateUserData);
+      const userData = JSON.parse(this.state.updateUserData);
+      this.socket.emit('update_user', userData)
     } catch(e) {
       alert('invalid json');
     }
-    this.socket.emit('update_user', userData)
   }
 
   createRoom() {
@@ -67,7 +66,7 @@ class UserActions extends Component {
   }
 
   selectRoom(roomId) {
-    this.setState({ activeRoomId: roomId }, () => this.socket.emit('get_room', { room_id: roomId }))
+    this.setState({ activeRoomId: roomId }, () => this.socket.emit('set_active_room', { room_id: roomId }))
   }
 
   async connect() {
