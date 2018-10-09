@@ -181,7 +181,11 @@ class UserActions extends Component {
                 <button onClick={() => this.selectRoom(room.room_id)}>{room.room_id}</button>
                 {!room.read && <b> - non lu</b>}
                 <ul>
-                  {room.users.map(u => <li key={u.user_id}>{u.user_id}</li>)}
+                  {room.users.map(u => (
+                    <li key={u.user_id}>
+                      {u.user_id} - <span style={{ color: u.online ? 'green' : 'red' }}>■</span>
+                    </li>)
+                  )}
                 </ul>
               </li>
             ))}
