@@ -16,10 +16,9 @@ const setLastRead = socket => async (data) => {
     },
   };
 
-  Room.update(room_id, roomData);
-  SocketManager
+  Room.update(room_id, roomData).then(() => SocketManager
     .getUsersSocketsBySocket(socket)
-    .forEach(s => getRooms(s)());
+    .forEach(s => getRooms(s)()));
 };
 
 export default setLastRead;

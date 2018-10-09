@@ -3,9 +3,6 @@ import getById from './getById';
 
 const create = (id, data) => Room
   .findOneAndUpdate({ _id: id }, data)
-  .then(async () => {
-    const room = await getById(id);
-    return room;
-  });
+  .then(() => getById(id));
 
 export default create;

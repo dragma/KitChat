@@ -1,18 +1,21 @@
+import truncate from 'lodash.truncate';
+
 import Message from '../data/message';
 import Room from '../data/room';
 import formatRoom from '../utils/formatRoom';
 import SocketManager from '../utils/SocketManager';
 import setLastRead from './setLastRead';
 import getRooms from './getRooms';
+import { MAX_MESSAGE_SIZE } from '../config';
 
 
 const addMessage = socket => async (data) => {
-  console.log('[EVENT] on add_message', data);
+  console.log('[EVENT] on add_message', { ...data, message: truncate(data.message, MAX_MESSAGE_SIZE) });
 
   socket.emit('message_sent');
 
   await Message.create({
-    message: data.message,
+    message: truncate(data.message, MAX_MESSAGE_SIZE),
     room_id: data.room_id,
     user_id: socket.user._id,
   });
@@ -27,11 +30,11 @@ const addMessage = socket => async (data) => {
 
   const userIds = room.users.map(u => u.kitchat_user_id);
 
+  setLastRead(socket)({ room_id: data.room_id });
+
   SocketManager
     .getSocketsByUserIds(userIds)
     .forEach(s => getRooms(s)());
-
-  setLastRead(socket)({ room_id: data.room_id });
 };
 
 export default addMessage;

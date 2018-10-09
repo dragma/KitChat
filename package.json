@@ -32,6 +32,7 @@
     "concurrently": "4.0.1",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
+    "lodash.truncate": "^4.4.2",
     "moment": "^2.22.2",
     "mongoose": "5.3.1",
     "socket.io": "^2.1.1"
