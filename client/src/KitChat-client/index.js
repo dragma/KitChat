@@ -70,10 +70,9 @@ class KitChatClient {
     this.socket.on(name, action);
     return this;
   }
-
   // end private methods 
 
-  // Default listeners
+  // default listeners
   onConnect(action) {
     return this.on('connect', KitChatClient.logger.on('connect', action, this.socket));
   }
@@ -131,7 +130,10 @@ class KitChatClient {
   typing() {
     return this._emit('typing');
   }
-  // end defautl emiters
+  updateUser(data) {
+    return this._emit('update_user', data);
+  }
+  // end default emiters
 
   on(name, action) {
     return this

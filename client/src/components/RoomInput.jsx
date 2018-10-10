@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Message from './Message';
-
 export default class Room extends React.Component {
   constructor(args) {
     super(args);
