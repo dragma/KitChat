@@ -10,14 +10,15 @@ import { MAX_MESSAGE_SIZE } from '../config';
 
 
 const addMessage = socket => async (data) => {
-  console.log('[EVENT] on add_message', { ...data, message: truncate(data.message, MAX_MESSAGE_SIZE) });
-
-  socket.emit('message_sent');
+  console.log('[DATA] for add_message :', data);
 
   await Message.create({
     message: truncate(data.message, MAX_MESSAGE_SIZE),
     room_id: data.room_id,
     user_id: socket.user._id,
+  }).then(() => {
+    console.log('[SEND] message_sent to socket :', socket.id);
+    socket.emit('message_sent');
   });
 
   const room = await Room
@@ -34,7 +35,10 @@ const addMessage = socket => async (data) => {
 
   SocketManager
     .getSocketsByUserIds(userIds)
-    .forEach(s => getRooms(s)());
+    .forEach((s) => {
+      console.log('Message created by socket :', socket.id);
+      getRooms(s)();
+    });
 };
 
 export default addMessage;

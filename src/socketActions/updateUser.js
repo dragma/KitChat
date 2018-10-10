@@ -1,12 +1,9 @@
 import User from '../data/user';
-import formatUser from '../utils/formatUser';
-import SocketManager from '../utils/SocketManager';
+import getUser from './getUser';
 
-const updateUser = socket => async (data) => {
-  console.log('[EVENT] on update_user', data);
-  const user = await User.update(socket.user._id, data);
-
-  SocketManager.getSocketsByUserId(socket.user._id).forEach(s => s.emit('user_updated', formatUser(user)));
+const updateUser = socket => (data) => {
+  console.log('[DATA] for update_user :', data);
+  return User.update(socket.user._id, data).then(getUser(socket));
 };
 
 export default updateUser;

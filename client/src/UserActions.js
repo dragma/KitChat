@@ -38,10 +38,10 @@ class UserActions extends Component {
   }
 
   initiateSocket() {
-    this.socket.on('connected', () => this.changeState('connected', true));
+    this.socket.on('connect', () => this.changeState('connected', true));
     this.socket.on('disconnect', () => this.changeState('connected', false));
     this.socket.on('created', data => console.log('CREATED', data))
-    this.socket.on('user_updated', data => console.log('USER UPDATED', data));
+    this.socket.on('get_user', data => console.log('USER UPDATED', data));
     this.socket.on('room_created', () => this.socket.emit('get_rooms'));
     this.socket.on('set_active_room', () => {
       console.log('ON SET ACTIVE ROOM');

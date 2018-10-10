@@ -3,7 +3,7 @@ import getRooms from './getRooms';
 import SocketManager from '../utils/SocketManager';
 
 const setLastRead = socket => async (data) => {
-  console.log('[EVENT] on set_lat_read', data);
+  console.log('[DATA] for set_last_read :', data);
   const room_id = data.room_id || SocketManager.getRoomIdBySocket(socket);
   const room = await Room.getById(room_id);
   if (!room.last_read_at) {

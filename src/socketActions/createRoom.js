@@ -3,7 +3,7 @@ import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
 
 const createRoom = socket => async (data) => {
-  console.log('[EVENT] on create_room', data);
+  console.log('[DATA] for create_room :', data);
   const roomData = {
     users: [],
   };
@@ -28,7 +28,10 @@ const createRoom = socket => async (data) => {
 
   SocketManager
     .getSocketsByUserIds(newRoom.users)
-    .forEach(s => s.emit('room_created', newRoom));
+    .forEach((s) => {
+      console.log('[SEND] room_created to socket :', s.id);
+      s.emit('room_created', newRoom);
+    });
 };
 
 export default createRoom;
