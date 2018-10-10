@@ -5,6 +5,7 @@ import formatRoom from '../utils/formatRoom';
 const getRooms = socket => async () => {
   const rooms = await Room
     .getByUserId(socket.user._id)
+    .then(rms => rms.filter(r => r.messages && r.messages.length))
     .then(rms => Promise.all(rms.map(r => formatRoom(r, socket.user._id, { nb_messages: 1 }))));
 
   SocketManager

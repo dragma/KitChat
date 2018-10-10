@@ -1,6 +1,8 @@
 import User from '../data/user';
 import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
+import formatRoom from '../utils/formatRoom';
+
 
 const createRoom = socket => async (data) => {
   console.log('[DATA] for create_room :', data);
@@ -28,9 +30,9 @@ const createRoom = socket => async (data) => {
 
   SocketManager
     .getSocketsByUserIds(newRoom.users)
-    .forEach((s) => {
+    .forEach(async (s) => {
       console.log('[SEND] room_created to socket :', s.id);
-      s.emit('room_created', newRoom);
+      s.emit('room_created', await formatRoom(newRoom));
     });
 };
 

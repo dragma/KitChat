@@ -27,7 +27,7 @@ const formatRoom = async (room, user_id, options = {}) => {
   formatedRoom.users = users;
   formatedRoom.messages = messages;
 
-  formatedRoom.allMessagesLoaded = messagesToLoadLength === allMessagesLength;
+  formatedRoom.all_messages_fetched = messagesToLoadLength === allMessagesLength;
 
   let read = false;
   if (!messages.length) {

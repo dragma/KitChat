@@ -43,6 +43,7 @@ class UserActions extends Component {
     this.socket.on('created', data => console.log('CREATED', data))
     this.socket.on('get_user', data => console.log('USER UPDATED', data));
     this.socket.on('room_created', () => this.socket.emit('get_rooms'));
+    this.socket.on('message_received', () => this.socket.emit('get_room', { nb_messages: this.state.roomNbMessage }))
     this.socket.on('set_active_room', () => {
       console.log('ON SET ACTIVE ROOM');
       this.socket.emit('get_room', { nb_messages: 10 });
@@ -214,7 +215,7 @@ class UserActions extends Component {
             }
             {
               this.state.currentRoom 
-              && !this.state.currentRoom.allMessagesLoaded
+              && !this.state.currentRoom.all_messages_fetched
               && <button
                 onClick={() => this.incrRoomLimitMessage()}
               >See more...</button> 
