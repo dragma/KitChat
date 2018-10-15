@@ -8,7 +8,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "2.0.3",
-    "kitchat-client": "../client"
+    "kitchat-client": "../kitchat-client"
   },
   "scripts": {
     "start": "react-scripts start",

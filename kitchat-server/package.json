@@ -1,0 +1,37 @@
+{
+  "name": "kitchat-server",
+  "version": "0.0.1",
+  "description": "kitchat server",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src -d dist",
+    "build:watch": "./node_modules/.bin/babel src -d dist --watch"
+  },
+  "keywords": [
+    "chat",
+    "server",
+    "socketio",
+    "mongodb"
+  ],
+  "author": "Florent Béjina",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "3.5.2",
+    "jsonwebtoken": "^8.3.0",
+    "lodash.truncate": "^4.4.2",
+    "moment": "^2.22.2",
+    "mongoose": "5.3.1",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.3",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "eslint": "5.6.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.14.0"
+  }
+}

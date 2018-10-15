@@ -1,11 +1,11 @@
 import decode from '../utils/decode';
 import User from '../data/user';
 
-const auth = async (socket, next) => {
+const auth = jwt_secret => async (socket, next) => {
   if (socket.handshake && socket.handshake.query && socket.handshake.query.access_token) {
     const token = socket.handshake.query.access_token;
     try {
-      const data = await decode(token);
+      const data = await decode(token, jwt_secret);
       let user = null;
       if (data.kitchat_user_id) {
         user = await User.getById(data.kitchat_user_id);

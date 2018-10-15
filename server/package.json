@@ -28,14 +28,9 @@
   "homepage": "https://github.com/dragma/KitChat#readme",
   "private": true,
   "dependencies": {
-    "bluebird": "3.5.2",
     "concurrently": "4.0.1",
     "express": "^4.16.3",
-    "jsonwebtoken": "^8.3.0",
-    "lodash.truncate": "^4.4.2",
-    "moment": "^2.22.2",
-    "mongoose": "5.3.1",
-    "socket.io": "^2.1.1"
+    "kitchat-server": "../kitchat-server"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
