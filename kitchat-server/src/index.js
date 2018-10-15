@@ -61,7 +61,6 @@ const createChatServer = (server, userOptions) => {
   };
 
   io.on('connection', (socket) => {
-    console.log('role', socket.user);
     console.log('a user connected', socket.id);
     SocketManager.addSocket(socket);
 
