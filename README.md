@@ -6,23 +6,30 @@ powerfull and simple node chat server
 docker-compose up mongo -d
 ```
 
-## start server
+## build and start server
+# build kitchat-server
+```
+cd kitchat-server
+yarn
+yarn build:watch
+```
+# start test server
 ```
 cd server
 yarn
 yarn dev
 ```
-
-## build client
+## build and start client
+# build client
 ```
-cd client
+cd kitchat-client
 yarn
 yarn build:watch
 ```
 
-## start test app
+# start test app
 ```
 cd app
 yarn
-yarn dev
+yarn start
 ```
