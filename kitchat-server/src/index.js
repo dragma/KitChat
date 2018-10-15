@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import bluebird from 'bluebird';
 import socketIo from 'socket.io';
 
+import { MAX_MESSAGE_SIZE, MONGO_URI, JWT_SECRET } from './config';
+
 import auth from './socketActions/auth';
 import getUser from './socketActions/getUser';
 import updateUser from './socketActions/updateUser';
@@ -14,13 +16,14 @@ import addMessage from './socketActions/addMessage';
 import setLastRead from './socketActions/setLastRead';
 
 import SocketManager from './utils/SocketManager';
-import { MAX_MESSAGE_SIZE, MONGO_URI, JWT_SECRET } from './config';
+import hasAccess from './utils/hasAccess';
 
 // default options
 const defaultOptions = {
   max_message_size: MAX_MESSAGE_SIZE,
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
+  rules: {},
 };
 
 // mogoose setup
@@ -58,35 +61,60 @@ const createChatServer = (server, userOptions) => {
   };
 
   io.on('connection', (socket) => {
+    console.log('role', socket.user);
     console.log('a user connected', socket.id);
     SocketManager.addSocket(socket);
 
     // on get user
-    socket.on('get_user', logger('get_user', getUser(socket)));
+    if (hasAccess('get_user', socket.user, options.rules)) {
+      socket.on('get_user', logger('get_user', getUser(socket)));
+    }
 
     // on user update
-    socket.on('update_user', logger('update_user', updateUser(socket)));
+    if (hasAccess('update_user', socket.user, options.rules)) {
+      socket.on('update_user', logger('update_user', updateUser(socket)));
+    }
 
     // on create room
-    socket.on('create_room', logger('create_room', createRoom(socket)));
+    if (hasAccess('create_room', socket.user, options.rules)) {
+      socket.on('create_room', logger('create_room', createRoom(socket)));
+    }
 
     // on get room
-    socket.on('get_room', logger('get_room', getRoom(socket)));
+
+    if (hasAccess('get_room', socket.user, options.rules)) {
+      socket.on('get_room', logger('get_room', getRoom(socket)));
+    }
 
     // on get rooms
-    socket.on('get_rooms', logger('get_rooms', getRooms(socket)));
+
+    if (hasAccess('get_rooms', socket.user, options.rules)) {
+      socket.on('get_rooms', logger('get_rooms', getRooms(socket)));
+    }
 
     // on get rooms
-    socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket)));
+
+    if (hasAccess('set_active_room', socket.user, options.rules)) {
+      socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket)));
+    }
 
     // on typing
-    socket.on('typing', logger('typing', sendTyping(socket)));
+
+    if (hasAccess('typing', socket.user, options.rules)) {
+      socket.on('typing', logger('typing', sendTyping(socket)));
+    }
 
     // on receive message
-    socket.on('add_message', logger('add_message', addMessage(socket, options)));
+
+    if (hasAccess('add_message', socket.user, options.rules)) {
+      socket.on('add_message', logger('add_message', addMessage(socket, options)));
+    }
 
     // on set last read
-    socket.on('set_last_read', logger('set_last_read', setLastRead(socket)));
+
+    if (hasAccess('set_last_read', socket.user, options.rules)) {
+      socket.on('set_last_read', logger('set_last_read', setLastRead(socket)));
+    }
 
     // user disconnects
     socket.on('disconnect', logger('disconnect', () => {

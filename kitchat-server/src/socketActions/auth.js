@@ -24,6 +24,7 @@ const auth = jwt_secret => async (socket, next) => {
         socket.user = {
           ...user,
           _id: user._id.toString(),
+          role: data.role,
         };
       }
     } catch (err) {
