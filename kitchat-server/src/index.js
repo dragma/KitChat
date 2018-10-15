@@ -80,37 +80,31 @@ const createChatServer = (server, userOptions) => {
     }
 
     // on get room
-
     if (hasAccess('get_room', socket.user, options.rules)) {
       socket.on('get_room', logger('get_room', getRoom(socket)));
     }
 
     // on get rooms
-
     if (hasAccess('get_rooms', socket.user, options.rules)) {
       socket.on('get_rooms', logger('get_rooms', getRooms(socket)));
     }
 
     // on get rooms
-
     if (hasAccess('set_active_room', socket.user, options.rules)) {
       socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket)));
     }
 
     // on typing
-
     if (hasAccess('typing', socket.user, options.rules)) {
       socket.on('typing', logger('typing', sendTyping(socket)));
     }
 
     // on receive message
-
     if (hasAccess('add_message', socket.user, options.rules)) {
       socket.on('add_message', logger('add_message', addMessage(socket, options)));
     }
 
     // on set last read
-
     if (hasAccess('set_last_read', socket.user, options.rules)) {
       socket.on('set_last_read', logger('set_last_read', setLastRead(socket)));
     }
