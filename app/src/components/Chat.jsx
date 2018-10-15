@@ -7,6 +7,7 @@ import Room from './Room';
 
 const DEFAULT_STATE = {
   user_id: 'azer1',
+  role: 'user',
   newRoom: null,
   secret: 'shhhh',
   rooms: [],
@@ -55,8 +56,10 @@ export default class Chat extends React.Component {
 
 
   async connection() {
-    const { url, user_id, secret } = this.state;
-    const access_token = await jwt.sign({ user_id }, secret);
+    const {
+      url, user_id, secret, role,
+    } = this.state;
+    const access_token = await jwt.sign({ user_id, role }, secret);
     this.client = new KitChatClient({
       url,
       access_token,
@@ -143,6 +146,7 @@ export default class Chat extends React.Component {
       newRoom,
       isTyping,
       room,
+      role,
     } = this.state;
     return (
       <div>
@@ -152,7 +156,14 @@ export default class Chat extends React.Component {
         >
           <input
             type="text"
+            value={role}
+            placeholder="role"
+            onChange={e => this.updateState('role', e.target.value)}
+          />
+          <input
+            type="text"
             value={user_id}
+            placeholder="user id"
             onChange={e => this.updateState('user_id', e.target.value)}
           />
           <input
