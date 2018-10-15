@@ -1,7 +1,7 @@
 import React from 'react';
 import jwt from 'jsonwebtoken';
+import KitChatClient from 'kitchat-client';
 
-import KitChatClient from '../KitChat-client';
 import RoomsList from './Rooms';
 import Room from './Room';
 
@@ -14,7 +14,7 @@ const DEFAULT_STATE = {
   user: {},
   room: null,
   isTyping: false,
-}
+};
 
 export default class Chat extends React.Component {
   constructor(args) {
@@ -43,31 +43,25 @@ export default class Chat extends React.Component {
     this.client.disconnect();
   }
 
-  saveRooms(rooms) {
-    let newRoom = null;
-    console.log('saveRooms', rooms)
-    if (this.state.newRoom) {
-      if (rooms.map(r => r.room_id).indexOf(this.state.newRoom.room_id) === -1) {
-        newRoom = this.state.newRoom;
-      }
+  onRoomCreated(room) {
+    this.selectRoom(room.room_id);
+    const { rooms = [] } = this.state;
+    if (rooms.map(r => r.room_id).indexOf(room.room_id) === -1) {
+      this.setState({
+        newRoom: room,
+      });
     }
-    this.setState({ 
-      newRoom,
-      rooms,
-    })
   }
 
-  loadActiveRoom(room) {
-    this.setState({ room })
-  }
-  
+
   async connection() {
-    const access_token = await jwt.sign({ user_id: this.state.user_id }, this.state.secret);
+    const { url, user_id, secret } = this.state;
+    const access_token = await jwt.sign({ user_id }, secret);
     this.client = new KitChatClient({
-      url: this.state.url,
+      url,
       access_token,
     });
-    
+
     this.client
       .create()
       .onConnect(() => this.setState({ connected: true }))
@@ -78,7 +72,7 @@ export default class Chat extends React.Component {
       .onMessageReceived(() => this.fetchMoreMessages(1))
       .onTyping(isTyping => this.setState({ isTyping }))
       .onSetLastRead(this.client.getRooms)
-      .onRoomCreated((room) => this.onRoomCreated(room))
+      .onRoomCreated(room => this.onRoomCreated(room))
       .connect()
       .getUser()
       .getRooms();
@@ -86,28 +80,33 @@ export default class Chat extends React.Component {
 
   disconnection() {
     this.client.disconnect();
-    this.setState({ 
-      ...DEFAULT_STATE,  
-    })
+    this.setState({
+      ...DEFAULT_STATE,
+    });
   }
 
-  onRoomCreated(room) {
-    this.selectRoom(room.room_id);
-    if (this.state.rooms.map(r => r.room_id).indexOf(room.room_id) === -1) {
-      this.setState({
-        newRoom: room,
-      });
+  loadActiveRoom(room) {
+    this.setState({ room });
+  }
+
+  saveRooms(rooms) {
+    let newRoom = null;
+    const { newRoom: newStateRoom } = this.state;
+    if (newStateRoom) {
+      if (rooms.map(r => r.room_id).indexOf(newStateRoom.room_id) === -1) {
+        newRoom = newStateRoom;
+      }
     }
-    
+    this.setState({
+      newRoom,
+      rooms,
+    });
   }
 
   selectRoom(roomId) {
-    this.setState(
-      { activeRoomId: roomId }, 
-      () => this.client
-        .setLastRead(roomId)
-        .setActiveRoom(this.state.activeRoomId)
-      );
+    return this.client
+      .setLastRead(roomId)
+      .setActiveRoom(roomId);
   }
 
   createRoom(user_id) {
@@ -119,13 +118,15 @@ export default class Chat extends React.Component {
   }
 
   fetchMoreMessages(nb) {
+    const { room } = this.state;
+    const { _options } = this.client;
     this.client.getRoom({
-      nb_messages: this.state.room.messages.length + (nb || this.client._options.messageChunkSize),
+      nb_messages: (room.messages || []).length + (nb || _options.messageChunkSize),
     });
   }
 
   sendMessage(message) {
-    this.client.sendMessage(message)
+    this.client.sendMessage(message);
   }
 
   typing() {
@@ -133,27 +134,39 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    return(
+    const {
+      user_id,
+      url,
+      connected,
+      rooms,
+      user,
+      newRoom,
+      isTyping,
+      room,
+    } = this.state;
+    return (
       <div>
         <div style={{
           display: 'flex',
-        }}>
-        <input 
-          type="text" 
-          value={this.state.user_id} 
-          onChange={e => this.updateState('user_id', e.target.value)} 
-        />
-        <input 
-          type="text" 
-          style={{
-            flex: 1,
-          }}
-          value={this.state.url} 
-          onChange={e => this.updateState('url', e.target.value)} 
-        />
+        }}
+        >
+          <input
+            type="text"
+            value={user_id}
+            onChange={e => this.updateState('user_id', e.target.value)}
+          />
+          <input
+            type="text"
+            style={{
+              flex: 1,
+            }}
+            value={url}
+            onChange={e => this.updateState('url', e.target.value)}
+          />
           {
-            !this.state.connected && (
+            !connected && (
               <button
+                type="button"
                 onClick={this.connection}
               >
                 Connexion
@@ -161,8 +174,9 @@ export default class Chat extends React.Component {
             )
           }
           {
-            this.state.connected && (
+            connected && (
               <button
+                type="button"
                 onClick={this.disconnection}
               >
                 Déconnexion
@@ -170,29 +184,31 @@ export default class Chat extends React.Component {
             )
           }
         </div>
-        {this.state.connected && 
+        {connected
+          && (
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>
-              <RoomsList 
-                rooms={this.state.rooms} 
-                me={this.state.user} 
+              <RoomsList
+                rooms={rooms}
+                me={user}
                 selectRoom={this.selectRoom}
                 createRoom={this.createRoom}
-                newRoom={this.state.newRoom}
+                newRoom={newRoom}
               />
             </div>
             <div style={{ flex: 1 }}>
-              <Room 
-                room={this.state.room} 
-                me={this.state.user} 
+              <Room
+                room={room}
+                me={user}
                 fetchMore={this.fetchMoreMessages}
                 sendMessage={this.sendMessage}
-                isTyping={this.state.isTyping}
+                isTyping={isTyping}
                 typing={this.typing}
               />
             </div>
-          </div>}  
+          </div>
+          )}
       </div>
-    )
+    );
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "kitchat",
   "version": "0.0.1",
-  "description": "chat server powered by socketio AND graphql",
+  "description": "chat server powered by socketio",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
   },
   "keywords": [
     "chat",
-    "graphql",
+    "server",
     "socketio",
     "mongodb"
   ],

@@ -1,28 +1,31 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
+  "name": "kitchat-client",
+  "version": "0.0.1",
+  "description": "kitchat socketio client",
+  "main": "dist/index.js",
   "dependencies": {
-    "jsonwebtoken": "^8.3.0",
-    "moment": "^2.22.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-scripts": "2.0.3",
     "socket.io-client": "^2.1.1"
   },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.3",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.7.0"
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "./node_modules/.bin/babel src -d dist",
+    "build:watch": "./node_modules/.bin/babel src -d dist --watch",
+    "build:app:watch": "./node_modules/.bin/babel src -d ../app/src/KitChat-client --watch"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "author": "Florent Béjina",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragma/KitChat.git"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "bugs": {
+    "url": "https://github.com/dragma/KitChat/issues"
+  },
+  "homepage": "https://github.com/dragma/KitChat#readme"
 }

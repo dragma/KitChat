@@ -8,13 +8,21 @@ docker-compose up mongo -d
 
 ## start server
 ```
+cd server
 yarn
 yarn dev
 ```
 
-## start client
+## build client
 ```
 cd client
 yarn
-yarn start dev
+yarn build:watch
+```
+
+## start test app
+```
+cd app
+yarn
+yarn dev
 ```
