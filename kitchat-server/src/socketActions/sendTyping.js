@@ -1,4 +1,5 @@
 import SocketManager from '../utils/SocketManager';
+import formatUser from '../utils/formatUser';
 
 const timeouts = {};
 
@@ -15,13 +16,20 @@ const manageTyping = (socket) => {
   }, 3000);
 };
 
-const sendTyping = socket => async () => {
+const sendTyping = (socket, webhook) => async () => {
   const room_id = SocketManager.getRoomIdBySocket(socket);
   const sockets = SocketManager.getSocketsByRoomId(room_id);
 
   sockets
     .filter(s => s.user._id !== socket.user._id)
     .forEach(s => manageTyping(s));
+
+  if (webhook && typeof webhook === 'function') {
+    webhook({
+      user: formatUser(socket.user),
+      room_id,
+    });
+  }
 };
 
 export default sendTyping;

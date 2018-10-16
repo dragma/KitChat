@@ -110,7 +110,7 @@ const createChatServer = (server, userOptions) => {
     // on typing
     if (hasAccess('typing', socket.user, options.rules)) {
       const hook = makeHook('typing');
-      socket.on('typing', logger('typing', sendTyping(socket)));
+      socket.on('typing', logger('typing', sendTyping(socket, hook)));
     }
 
     // on receive message
