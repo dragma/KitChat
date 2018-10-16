@@ -71,14 +71,23 @@ const customRoom = {
       [user.kitchat_user_id]: moment().add(1, 'm').toDate(),
     },
   }),
-  create_if: (user, rooms) => !rooms
-    .filter(room => room.custom_flags.indexOf('assistance') !== -1)
-    .length, // function returns boolean
+  create_if: (user, rooms) => { // function returns boolean
+    if (user.role === 'admin') return false;
+    return !rooms
+      .filter(room => room.custom_flags.indexOf('assistance') !== -1)
+      .length;
+  },
   first_message: () => ({ // function (user) => { foo: 'bar' }
     message: 'Hello world',
   }),
 };
 const customRooms = [customRoom];
+
+const customRoomsGetter = {
+  admin: [() => ({ // array of functions user => ({ foo: 'bar' })
+    custom_flags: ['assistance'],
+  })],
+};
 
 mountChatServer(server, {
   mongo_uri: MONGO_URI,
@@ -87,4 +96,5 @@ mountChatServer(server, {
   rules: customRules,
   webhooks: customWebhooks,
   cutom_rooms: customRooms,
+  custom_rooms_getters: customRoomsGetter,
 });

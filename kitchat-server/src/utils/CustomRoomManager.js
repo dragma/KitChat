@@ -67,4 +67,4 @@ class CustomRoomManager {
   }
 }
 
-export default CustomRoomManager;
+export default new CustomRoomManager();

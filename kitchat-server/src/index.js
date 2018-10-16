@@ -16,6 +16,7 @@ import addMessage from './socketActions/addMessage';
 import setLastRead from './socketActions/setLastRead';
 
 import CustomRoomManager from './utils/CustomRoomManager';
+import CustomRoomsGetterManager from './utils/CustomRoomsGettersManager';
 import formatUser from './utils/formatUser';
 import SocketManager from './utils/SocketManager';
 import webhook from './utils/webhook';
@@ -29,6 +30,7 @@ const defaultOptions = {
   rules: {},
   webhooks: {},
   cutom_rooms: [],
+  custom_rooms_getters: {},
 };
 
 // mogoose setup
@@ -57,11 +59,13 @@ const createChatServer = (server, userOptions) => {
   connectMongo(options.mongo_uri);
 
   const makeHook = webhook(options.webhooks, options.jwt_secret);
-  const RoomsManager = new CustomRoomManager();
 
   options
     .cutom_rooms
-    .forEach(customRoom => RoomsManager.addCustomRoom(customRoom));
+    .forEach(customRoom => CustomRoomManager.addCustomRoom(customRoom));
+
+  Object.keys(options.custom_rooms_getters)
+    .forEach(key => CustomRoomsGetterManager.add(key, options.custom_rooms_getters[key]));
 
   const io = socketIo(server);
 
@@ -77,7 +81,7 @@ const createChatServer = (server, userOptions) => {
     SocketManager.addSocket(socket);
 
     /* ON CONNECTION ACTIONS */
-    RoomsManager
+    CustomRoomManager
       .getCustomRoomsByEventName('connection')
       .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
 
@@ -86,7 +90,7 @@ const createChatServer = (server, userOptions) => {
 
     // on get user
     if (hasAccess('get_user', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('get_user')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_user');
@@ -95,7 +99,7 @@ const createChatServer = (server, userOptions) => {
 
     // on user update
     if (hasAccess('update_user', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('update_user')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('update_user');
@@ -104,7 +108,7 @@ const createChatServer = (server, userOptions) => {
 
     // on create room
     if (hasAccess('create_room', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('create_room')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('create_room');
@@ -113,7 +117,7 @@ const createChatServer = (server, userOptions) => {
 
     // on get room
     if (hasAccess('get_room', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('get_room')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_room');
@@ -122,7 +126,7 @@ const createChatServer = (server, userOptions) => {
 
     // on get rooms
     if (hasAccess('get_rooms', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('get_rooms')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_rooms');
@@ -131,7 +135,7 @@ const createChatServer = (server, userOptions) => {
 
     // on get rooms
     if (hasAccess('set_active_room', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('set_active_room')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('set_active_room');
@@ -140,7 +144,7 @@ const createChatServer = (server, userOptions) => {
 
     // on typing
     if (hasAccess('typing', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('typing')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('typing');
@@ -149,7 +153,7 @@ const createChatServer = (server, userOptions) => {
 
     // on receive message
     if (hasAccess('add_message', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('add_message')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('add_message');
@@ -158,7 +162,7 @@ const createChatServer = (server, userOptions) => {
 
     // on set last read
     if (hasAccess('set_last_read', socket.user, options.rules)) {
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('set_last_read')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('set_last_read');
@@ -168,7 +172,7 @@ const createChatServer = (server, userOptions) => {
     // user disconnects
     socket.on('disconnect', logger('disconnect', () => {
       makeHook('disconnect')({ user: formatUser(socket.user) });
-      RoomsManager
+      CustomRoomManager
         .getCustomRoomsByEventName('disconnect')
         .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       SocketManager.deleteSocket(socket);

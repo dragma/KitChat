@@ -17,7 +17,7 @@ const formatRoom = async (room, user_id, options = {}) => {
   } else {
     messagesIds = formatedRoom.messages;
   }
-  const allMessagesLength = formatedRoom.messages.length;
+  const allMessagesLength = (formatedRoom.messages || []).length;
   const messagesToLoadLength = messagesIds.length;
 
   const messages = await Message.getByIds(messagesIds)
