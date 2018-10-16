@@ -104,7 +104,7 @@ const createChatServer = (server, userOptions) => {
     // on get rooms
     if (hasAccess('set_active_room', socket.user, options.rules)) {
       const hook = makeHook('set_active_room');
-      socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket)));
+      socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket, hook)));
     }
 
     // on typing
