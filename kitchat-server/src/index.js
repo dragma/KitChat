@@ -15,6 +15,7 @@ import sendTyping from './socketActions/sendTyping';
 import addMessage from './socketActions/addMessage';
 import setLastRead from './socketActions/setLastRead';
 
+import CustomRoomManager from './utils/CustomRoomManager';
 import formatUser from './utils/formatUser';
 import SocketManager from './utils/SocketManager';
 import webhook from './utils/webhook';
@@ -27,6 +28,7 @@ const defaultOptions = {
   jwt_secret: JWT_SECRET,
   rules: {},
   webhooks: {},
+  cutom_rooms: [],
 };
 
 // mogoose setup
@@ -55,6 +57,11 @@ const createChatServer = (server, userOptions) => {
   connectMongo(options.mongo_uri);
 
   const makeHook = webhook(options.webhooks, options.jwt_secret);
+  const RoomsManager = new CustomRoomManager();
+
+  options
+    .cutom_rooms
+    .forEach(customRoom => RoomsManager.addCustomRoom(customRoom));
 
   const io = socketIo(server);
 
@@ -69,58 +76,91 @@ const createChatServer = (server, userOptions) => {
     console.log('a user connected', socket.id);
     SocketManager.addSocket(socket);
 
+    /* ON CONNECTION ACTIONS */
+    RoomsManager
+      .getCustomRoomsByEventName('connection')
+      .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
+
     makeHook('connection')({ user: formatUser(socket.user) });
+    /* ON CONNECTION ACTIONS END */
 
     // on get user
     if (hasAccess('get_user', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('get_user')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_user');
       socket.on('get_user', logger('get_user', getUser(socket, hook)));
     }
 
     // on user update
     if (hasAccess('update_user', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('update_user')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('update_user');
       socket.on('update_user', logger('update_user', updateUser(socket, hook)));
     }
 
     // on create room
     if (hasAccess('create_room', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('create_room')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('create_room');
       socket.on('create_room', logger('create_room', createRoom(socket, hook)));
     }
 
     // on get room
     if (hasAccess('get_room', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('get_room')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_room');
       socket.on('get_room', logger('get_room', getRoom(socket, hook)));
     }
 
     // on get rooms
     if (hasAccess('get_rooms', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('get_rooms')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('get_rooms');
       socket.on('get_rooms', logger('get_rooms', getRooms(socket, hook)));
     }
 
     // on get rooms
     if (hasAccess('set_active_room', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('set_active_room')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('set_active_room');
       socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket, hook)));
     }
 
     // on typing
     if (hasAccess('typing', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('typing')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('typing');
       socket.on('typing', logger('typing', sendTyping(socket, hook)));
     }
 
     // on receive message
     if (hasAccess('add_message', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('add_message')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('add_message');
       socket.on('add_message', logger('add_message', addMessage(socket, options, hook)));
     }
 
     // on set last read
     if (hasAccess('set_last_read', socket.user, options.rules)) {
+      RoomsManager
+        .getCustomRoomsByEventName('set_last_read')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       const hook = makeHook('set_last_read');
       socket.on('set_last_read', logger('set_last_read', setLastRead(socket, hook)));
     }
@@ -128,6 +168,9 @@ const createChatServer = (server, userOptions) => {
     // user disconnects
     socket.on('disconnect', logger('disconnect', () => {
       makeHook('disconnect')({ user: formatUser(socket.user) });
+      RoomsManager
+        .getCustomRoomsByEventName('disconnect')
+        .map(CustomRoom => CustomRoom.createRoom(socket.user._id));
       SocketManager.deleteSocket(socket);
       console.log('a user disconnected, removing it form clients list');
       socket.disconnect(true);

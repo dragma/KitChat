@@ -10,9 +10,11 @@ const formatMessage = async (message) => {
   delete formatedMessage.__v;
   delete formatedMessage._id;
 
-  const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u));
-  formatedMessage.user = user;
-  delete formatedMessage.user_id;
+  if (formatedMessage.user_id) {
+    const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u));
+    formatedMessage.user = user;
+    delete formatedMessage.user_id;
+  }
 
   return {
     ...message,

@@ -30,7 +30,8 @@
   "dependencies": {
     "concurrently": "4.0.1",
     "express": "^4.16.3",
-    "kitchat-server": "../kitchat-server"
+    "kitchat-server": "../kitchat-server",
+    "moment": "^2.22.2"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

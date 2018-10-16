@@ -1,5 +1,6 @@
 import express from 'express';
 import { Server } from 'http';
+import moment from 'moment';
 
 import mountChatServer from 'kitchat-server';
 
@@ -43,6 +44,7 @@ const customWebhooks = {
     url: `http://localhost:${APP_PORT}`,
     route: '/webhooks',
   },
+  // all listeners have custom webhooks
   connection: true,
   disconnect: true,
   get_user: true,
@@ -59,11 +61,30 @@ const customWebhooks = {
   },
 };
 
-console.log(`http://localhost:${APP_PORT}/webhooks`);
+const customRoom = {
+  create_on: 'connection', // can be on of all listeners
+  room_data: user => ({ // function (user, rooms) => { foo: 'bar' }
+    users: [user.kitchat_user_id],
+    name: 'Assitance',
+    custom_flags: ['assistance'],
+    last_read_at: {
+      [user.kitchat_user_id]: moment().add(1, 'm').toDate(),
+    },
+  }),
+  create_if: (user, rooms) => !rooms
+    .filter(room => room.custom_flags.indexOf('assistance') !== -1)
+    .length, // function returns boolean
+  first_message: () => ({ // function (user) => { foo: 'bar' }
+    message: 'Hello world',
+  }),
+};
+const customRooms = [customRoom];
+
 mountChatServer(server, {
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
   max_message_size: MAX_MESSAGE_SIZE,
   rules: customRules,
   webhooks: customWebhooks,
+  cutom_rooms: customRooms,
 });
