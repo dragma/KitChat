@@ -46,6 +46,7 @@ const customWebhooks = {
   connection: true,
   disconnect: true,
   get_user: true,
+  update_user: true,
   add_message: {
     url: `http://localhost:${APP_PORT}`,
     route: '/webhooks',

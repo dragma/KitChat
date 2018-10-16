@@ -80,7 +80,7 @@ const createChatServer = (server, userOptions) => {
     // on user update
     if (hasAccess('update_user', socket.user, options.rules)) {
       const hook = makeHook('update_user');
-      socket.on('update_user', logger('update_user', updateUser(socket)));
+      socket.on('update_user', logger('update_user', updateUser(socket, hook)));
     }
 
     // on create room
