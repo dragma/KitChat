@@ -6,7 +6,7 @@ import formatUser from './formatUser';
 import formatMessage from './formatMessage';
 
 const formatRoom = async (room, user_id, options = {}) => {
-  const formatedRoom = Object.assign(room);
+  const formatedRoom = Object.assign({}, room);
 
   formatedRoom.room_id = room._id;
 
@@ -42,8 +42,8 @@ const formatRoom = async (room, user_id, options = {}) => {
 
   formatedRoom.read = read;
 
-  delete room.__v;
-  delete room._id;
+  delete formatedRoom.__v;
+  delete formatedRoom._id;
 
   return {
     ...room,
