@@ -98,7 +98,7 @@ const createChatServer = (server, userOptions) => {
     // on get rooms
     if (hasAccess('get_rooms', socket.user, options.rules)) {
       const hook = makeHook('get_rooms');
-      socket.on('get_rooms', logger('get_rooms', getRooms(socket)));
+      socket.on('get_rooms', logger('get_rooms', getRooms(socket, hook)));
     }
 
     // on get rooms
