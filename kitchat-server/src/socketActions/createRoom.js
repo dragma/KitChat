@@ -29,7 +29,7 @@ const createRoom = (socket, webhook) => async (data) => {
     [newRoom] = rooms;
   }
 
-  const formatedNewRoom = await formatRoom(newRoom);
+  const formatedNewRoom = await formatRoom(newRoom, socket.user._id);
 
   if (!rooms.length) {
     if (webhook && typeof webhook === 'function') {

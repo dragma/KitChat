@@ -37,7 +37,7 @@ class CustomRoomsGettersManager {
         }
         return acc;
       }, []))
-      .then(rms => Promise.all(rms.map(r => formatRoom(r))));
+      .then(rms => Promise.all(rms.map(r => formatRoom(r, socket.user._id, { nb_messages: 1 }))));
 
     return rooms;
   }

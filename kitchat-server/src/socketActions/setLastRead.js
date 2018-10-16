@@ -6,6 +6,7 @@ import formatUser from '../utils/formatUser';
 const setLastRead = (socket, webhook) => async (data = {}) => {
   console.log('[DATA] for set_last_read :', data);
   const room_id = (data && data.room_id) || SocketManager.getRoomIdBySocket(socket);
+  console.log('ROOM ID', room_id);
   const room = await Room.getById(room_id);
   if (!room.last_read_at) {
     room.last_read_at = {};

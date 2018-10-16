@@ -26,7 +26,7 @@ class CustomRoom {
 
   async createRoom(user_id) {
     const user = await User.getById(user_id).then(usr => formatUser(usr));
-    const rooms = await Room.getByUserId(user_id).then(rms => Promise.all(rms.map(formatRoom)));
+    const rooms = await Room.getByUserId(user_id).then(rms => Promise.all(rms.map(r => formatRoom(r, user_id))));
 
     const test = this._shallCreate(user, rooms);
 
