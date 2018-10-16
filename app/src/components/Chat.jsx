@@ -6,8 +6,8 @@ import RoomsList from './Rooms';
 import Room from './Room';
 
 const DEFAULT_STATE = {
-  user_id: 'azer1',
-  role: 'user',
+  user_id: 'florent',
+  role: 'admin',
   newRoom: null,
   secret: 'shhhh',
   rooms: [],
@@ -93,6 +93,7 @@ export default class Chat extends React.Component {
   }
 
   saveRooms(rooms) {
+    console.log('SAVE ROOMS', rooms);
     let newRoom = null;
     const { newRoom: newStateRoom } = this.state;
     if (newStateRoom) {
