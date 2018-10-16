@@ -2,9 +2,10 @@ import User from '../data/user';
 import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
 import formatRoom from '../utils/formatRoom';
+import formatUser from '../utils/formatUser';
 
 
-const createRoom = socket => async (data) => {
+const createRoom = (socket, webhook) => async (data) => {
   console.log('[DATA] for create_room :', data);
   const roomData = {
     users: [],
@@ -28,11 +29,22 @@ const createRoom = socket => async (data) => {
     [newRoom] = rooms;
   }
 
+  const formatedNewRoom = await formatRoom(newRoom);
+
+  if (!rooms.length) {
+    if (webhook && typeof webhook === 'function') {
+      webhook({
+        user: formatUser(socket.user),
+        room: formatedNewRoom,
+      });
+    }
+  }
+
   SocketManager
     .getSocketsByUserIds(newRoom.users)
     .forEach(async (s) => {
       console.log('[SEND] room_created to socket :', s.id);
-      s.emit('room_created', await formatRoom(newRoom));
+      s.emit('room_created', formatedNewRoom);
     });
 };
 
