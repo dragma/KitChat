@@ -1,8 +1,9 @@
 import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
 import formatRoom from '../utils/formatRoom';
+import formatUser from '../utils/formatUser';
 
-const getRooms = socket => async (data) => {
+const getRooms = (socket, webhook) => async (data) => {
   console.log('[DATA] for get_room :', data);
   const room_id = SocketManager.getRoomIdBySocket(socket);
 
@@ -16,6 +17,13 @@ const getRooms = socket => async (data) => {
 
   console.log('[SEND] get_room to socket :', socket.id);
   socket.emit('get_room', formatedRoom);
+
+  if (webhook && typeof webhook === 'function') {
+    webhook({
+      user: formatUser(socket.user),
+      room: formatedRoom,
+    });
+  }
 };
 
 export default getRooms;
