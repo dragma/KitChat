@@ -1,10 +1,10 @@
 const hasAccess = (rule, user, rules) => {
   const { role } = user;
-  if (!rules.rulesType && !rules.rules) {
+  if (!rules.rules_type && !rules.rules) {
     console.log('[INFO] no roles given. Granted all access to all users.');
     return true;
   }
-  if (!rules.rulesType || rules.rulesType === 'blacklist') {
+  if (!rules.rules_type || rules.rules_type === 'blacklist') {
     if (!role) {
       console.log('[WARNING] user has no role. On blacklist mode, user has all rights');
       return true;
@@ -16,7 +16,7 @@ const hasAccess = (rule, user, rules) => {
       return false;
     }
     return true;
-  } if (rules.rulesType === 'whitelist') {
+  } if (rules.rules_type === 'whitelist') {
     if (!role) {
       console.log('[WARNING] user has no role. On whitelist mode, user has no rights');
       return false;
@@ -29,7 +29,7 @@ const hasAccess = (rule, user, rules) => {
     console.log('[INFO] rule', rule, 'not granted for user', user._id);
     return false;
   }
-  console.log('[WARNING] bad rulesType value : ', rules.rulesType);
+  console.log('[WARNING] bad rules_type value : ', rules.rules_type);
   return false;
 };
 

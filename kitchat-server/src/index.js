@@ -15,7 +15,9 @@ import sendTyping from './socketActions/sendTyping';
 import addMessage from './socketActions/addMessage';
 import setLastRead from './socketActions/setLastRead';
 
+import formatUser from './utils/formatUser';
 import SocketManager from './utils/SocketManager';
+import webhook from './utils/webhook';
 import hasAccess from './utils/hasAccess';
 
 // default options
@@ -24,6 +26,7 @@ const defaultOptions = {
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
   rules: {},
+  webhooks: {},
 };
 
 // mogoose setup
@@ -51,6 +54,8 @@ const createChatServer = (server, userOptions) => {
 
   connectMongo(options.mongo_uri);
 
+  const makeHook = webhook(options.webhooks, options.jwt_secret);
+
   const io = socketIo(server);
 
   io.use(auth(options.jwt_secret));
@@ -63,6 +68,8 @@ const createChatServer = (server, userOptions) => {
   io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
     SocketManager.addSocket(socket);
+
+    makeHook('connection')({ on: 'connection', user: formatUser(socket.user) });
 
     // on get user
     if (hasAccess('get_user', socket.user, options.rules)) {
@@ -101,7 +108,8 @@ const createChatServer = (server, userOptions) => {
 
     // on receive message
     if (hasAccess('add_message', socket.user, options.rules)) {
-      socket.on('add_message', logger('add_message', addMessage(socket, options)));
+      const hook = makeHook('add_message');
+      socket.on('add_message', logger('add_message', addMessage(socket, options, hook)));
     }
 
     // on set last read

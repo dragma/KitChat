@@ -6,6 +6,7 @@ const formatMessage = async (message) => {
 
   formatedMessage.message_id = message._id;
   formatedMessage.user_id = message.user;
+  formatedMessage.room_id = message.room;
   delete message.user;
   delete message.__v;
   delete message._id;

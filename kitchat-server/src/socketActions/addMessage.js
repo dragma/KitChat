@@ -5,18 +5,21 @@ import Room from '../data/room';
 import SocketManager from '../utils/SocketManager';
 import setLastRead from './setLastRead';
 import getRooms from './getRooms';
+import formatMessage from '../utils/formatMessage';
+import formatUser from '../utils/formatUser';
 
-const addMessage = (socket, options) => async (data) => {
+const addMessage = (socket, options, webhook) => async (data) => {
   console.log('[DATA] for add_message :', data);
   const room_id = SocketManager.getRoomIdBySocket(socket);
 
-  await Message.create({
+  const message = await Message.create({
     message: truncate(data.message, options.max_message_size),
     room_id,
     user_id: socket.user._id,
-  }).then(() => {
+  }).then((msg) => {
     console.log('[SEND] message_sent to socket :', socket.id);
     socket.emit('message_sent');
+    return formatMessage(msg);
   });
 
   SocketManager
@@ -35,6 +38,15 @@ const addMessage = (socket, options) => async (data) => {
       console.log('Message created by socket :', socket.id);
       getRooms(s)();
     });
+
+  if (webhook && typeof webhook === 'function') {
+    webhook({
+      on: 'add_message',
+      user: formatUser(socket.user),
+      message,
+      room_id,
+    });
+  }
 };
 
 export default addMessage;
