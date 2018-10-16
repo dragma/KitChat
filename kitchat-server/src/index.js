@@ -69,40 +69,47 @@ const createChatServer = (server, userOptions) => {
     console.log('a user connected', socket.id);
     SocketManager.addSocket(socket);
 
-    makeHook('connection')({ on: 'connection', user: formatUser(socket.user) });
+    makeHook('connection')({ user: formatUser(socket.user) });
 
     // on get user
     if (hasAccess('get_user', socket.user, options.rules)) {
-      socket.on('get_user', logger('get_user', getUser(socket)));
+      const hook = makeHook('get_user');
+      socket.on('get_user', logger('get_user', getUser(socket, hook)));
     }
 
     // on user update
     if (hasAccess('update_user', socket.user, options.rules)) {
+      const hook = makeHook('update_user');
       socket.on('update_user', logger('update_user', updateUser(socket)));
     }
 
     // on create room
     if (hasAccess('create_room', socket.user, options.rules)) {
+      const hook = makeHook('create_room');
       socket.on('create_room', logger('create_room', createRoom(socket)));
     }
 
     // on get room
     if (hasAccess('get_room', socket.user, options.rules)) {
+      const hook = makeHook('get_room');
       socket.on('get_room', logger('get_room', getRoom(socket)));
     }
 
     // on get rooms
     if (hasAccess('get_rooms', socket.user, options.rules)) {
+      const hook = makeHook('get_rooms');
       socket.on('get_rooms', logger('get_rooms', getRooms(socket)));
     }
 
     // on get rooms
     if (hasAccess('set_active_room', socket.user, options.rules)) {
+      const hook = makeHook('set_active_room');
       socket.on('set_active_room', logger('set_active_room', setActiveRoom(socket)));
     }
 
     // on typing
     if (hasAccess('typing', socket.user, options.rules)) {
+      const hook = makeHook('typing');
       socket.on('typing', logger('typing', sendTyping(socket)));
     }
 
@@ -114,11 +121,13 @@ const createChatServer = (server, userOptions) => {
 
     // on set last read
     if (hasAccess('set_last_read', socket.user, options.rules)) {
+      const hook = makeHook('set_last_read');
       socket.on('set_last_read', logger('set_last_read', setLastRead(socket)));
     }
 
     // user disconnects
     socket.on('disconnect', logger('disconnect', () => {
+      makeHook('disconnect')({ user: formatUser(socket.user) });
       SocketManager.deleteSocket(socket);
       console.log('a user disconnected, removing it form clients list');
       socket.disconnect(true);

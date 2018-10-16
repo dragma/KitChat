@@ -41,11 +41,11 @@ const customRules = {
 const customWebhooks = {
   default: {
     url: `http://localhost:${APP_PORT}`,
-  },
-  connection: {
-    url: `http://localhost:${APP_PORT}`,
     route: '/webhooks',
   },
+  connection: true,
+  disconnect: true,
+  get_user: true,
   add_message: {
     url: `http://localhost:${APP_PORT}`,
     route: '/webhooks',
