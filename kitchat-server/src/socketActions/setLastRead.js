@@ -1,8 +1,9 @@
 import Room from '../data/room';
 import getRooms from './getRooms';
 import SocketManager from '../utils/SocketManager';
+import formatUser from '../utils/formatUser';
 
-const setLastRead = socket => async (data = {}) => {
+const setLastRead = (socket, webhook) => async (data = {}) => {
   console.log('[DATA] for set_last_read :', data);
   const room_id = (data && data.room_id) || SocketManager.getRoomIdBySocket(socket);
   const room = await Room.getById(room_id);
@@ -23,6 +24,13 @@ const setLastRead = socket => async (data = {}) => {
       s.emit('set_last_read');
       getRooms(s)();
     }));
+
+  if (webhook && typeof webhook === 'function') {
+    webhook({
+      user: formatUser(socket.user),
+      room_id,
+    });
+  }
 };
 
 export default setLastRead;

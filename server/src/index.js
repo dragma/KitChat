@@ -52,6 +52,7 @@ const customWebhooks = {
   get_rooms: true,
   set_active_room: true,
   typing: true,
+  set_last_read: true,
   add_message: {
     url: `http://localhost:${APP_PORT}`,
     route: '/webhooks',

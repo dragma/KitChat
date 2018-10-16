@@ -122,7 +122,7 @@ const createChatServer = (server, userOptions) => {
     // on set last read
     if (hasAccess('set_last_read', socket.user, options.rules)) {
       const hook = makeHook('set_last_read');
-      socket.on('set_last_read', logger('set_last_read', setLastRead(socket)));
+      socket.on('set_last_read', logger('set_last_read', setLastRead(socket, hook)));
     }
 
     // user disconnects
