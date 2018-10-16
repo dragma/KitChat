@@ -4,15 +4,15 @@ import uuid from 'uuid';
 
 class WebHookRequest {
   constructor({
-    url, data, Manager, secret, config,
+    url, data, Manager, secret, config, on,
   }) {
     this.url = url;
+    this.on = on;
     this.data = data;
     this.secret = secret;
     this.config = config;
     this.id = uuid.v4();
     this.Manager = Manager;
-
 
     this.sign = this.sign.bind(this);
     this.send = this.send.bind(this);
@@ -25,7 +25,7 @@ class WebHookRequest {
 
   async send() {
     const {
-      Manager, id, url, signedData, config, data: { on },
+      Manager, id, url, signedData, config, on,
     } = this;
     await this.sign();
     console.log('[HOOK] send', on, 'to', url);
@@ -44,8 +44,11 @@ class WebHookRequest {
 
 
 class WebHookManager {
-  constructor({ secret, base_url, axios_config }) {
+  constructor({
+    on, secret, base_url, axios_config,
+  }) {
     this.secret = secret;
+    this.on = on;
     this.base_url = base_url;
     this.axios_config = axios_config;
     this.requests = {};
@@ -65,6 +68,7 @@ class WebHookManager {
       secret: this.secret,
       url,
       data,
+      on: this.on,
       Manager: this,
       config: axios_config || this.axios_config || null,
     });

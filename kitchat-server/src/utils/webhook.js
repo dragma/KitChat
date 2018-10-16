@@ -8,6 +8,7 @@ const webhookMaker = (webhooks_options, secret) => (action_name) => {
   }
   if (!webhooks[action_name]) {
     webhooks[action_name] = new WebHookManager({
+      on: action_name,
       secret,
       base_url: webhooks_options[action_name].url || webhooks_options.default.url,
     });
