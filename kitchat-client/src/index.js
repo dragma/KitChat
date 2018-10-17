@@ -104,6 +104,9 @@ class KitChatClient {
   onRoomCreated(action) {
     return this.on('room_created', KitChatClient.logger.on('room_created', action, this.socket));
   }
+  onRefetchRooms(action) {
+    return this.on('refetch_rooms', KitChatClient.logger.on('refetch_rooms', action, this.socket));
+  }
   // end default listeners
 
   // default emiters
@@ -181,6 +184,7 @@ KitChatClient.DEFAULT_LISTENER_ACTIONS = {
   typing: KitChatClient.logger.on('typing'),
   get_rooms: KitChatClient.logger.on('get_rooms'),
   get_room: KitChatClient.logger.on('get_room'),
+  refetch_rooms: KitChatClient.logger.on('refetch_rooms'),
 };
 
 KitChatClient.DEFAULT_OPIONS = {

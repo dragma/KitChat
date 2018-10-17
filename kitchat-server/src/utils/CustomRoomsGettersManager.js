@@ -4,6 +4,7 @@ import formatRoom from './formatRoom';
 class CustomRoomsGettersManager {
   constructor() {
     this.getters = {};
+    this.io = null;
 
     this.hasGetters = this.hasGetters.bind(this);
     this.add = this.add.bind(this);
@@ -37,7 +38,9 @@ class CustomRoomsGettersManager {
         }
         return acc;
       }, []))
-      .then(rms => Promise.all(rms.map(r => formatRoom(r, socket.user._id, { nb_messages: 1 }))));
+      .then(rms => Promise.all(
+        rms.map(r => formatRoom(r, socket.user._id, this.io, socket, { nb_messages: 1 })),
+      ));
 
     return rooms;
   }

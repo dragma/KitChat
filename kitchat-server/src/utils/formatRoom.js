@@ -5,7 +5,7 @@ import Message from '../data/message';
 import formatUser from './formatUser';
 import formatMessage from './formatMessage';
 
-const formatRoom = async (room, user_id, options = {}) => {
+const formatRoom = async (room, user_id, io, socket, options = {}) => {
   const formatedRoom = Object.assign({}, room);
 
   formatedRoom.room_id = room._id;
@@ -21,9 +21,9 @@ const formatRoom = async (room, user_id, options = {}) => {
   const messagesToLoadLength = messagesIds.length;
 
   const messages = await Message.getByIds(messagesIds)
-    .then(msgs => Promise.all(msgs.reverse().map(msg => formatMessage(msg))));
+    .then(msgs => Promise.all(msgs.reverse().map(msg => formatMessage(msg, io, socket))));
   const users = await User.getByIds(room.users)
-    .then(usrs => Promise.all(usrs.map(u => formatUser(u))));
+    .then(usrs => Promise.all(usrs.map(u => formatUser(u, io, socket))));
   formatedRoom.users = users;
   formatedRoom.messages = messages;
 

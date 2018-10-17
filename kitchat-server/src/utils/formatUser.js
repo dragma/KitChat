@@ -1,6 +1,4 @@
-import SocketManager from './SocketManager';
-
-const formatUser = (user) => {
+const formatUser = (user, io) => {
   const formatedUser = Object.assign({}, user);
 
   formatedUser.kitchat_user_id = user._id;
@@ -11,9 +9,11 @@ const formatUser = (user) => {
     delete formatedUser.secondary_id;
   }
 
-  const online = !!SocketManager.getSocketsByUserId(formatedUser.kitchat_user_id).length;
-
-  formatedUser.online = online;
+  if (io.sockets.adapter.rooms && io.sockets.adapter.rooms[`user:${formatedUser.kitchat_user_id}`]) {
+    formatedUser.online = true;
+  } else {
+    formatedUser.online = false;
+  }
 
   return {
     ...user,

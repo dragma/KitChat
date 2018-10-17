@@ -24,9 +24,11 @@ class CustomRoom {
     return this.create_if(user, rooms);
   }
 
-  async createRoom(user_id) {
-    const user = await User.getById(user_id).then(usr => formatUser(usr));
-    const rooms = await Room.getByUserId(user_id).then(rms => Promise.all(rms.map(r => formatRoom(r, user_id))));
+  async createRoom(user_id, io, socket) {
+    const user = await User.getById(user_id)
+      .then(usr => formatUser(usr, io, socket));
+    const rooms = await Room.getByUserId(user_id)
+      .then(rms => Promise.all(rms.map(r => formatRoom(r, user_id, io, socket))));
 
     const test = this._shallCreate(user, rooms);
 
@@ -55,11 +57,15 @@ class CustomRoomManager {
     this.custom_rooms = {};
   }
 
-  addCustomRoom(custom_room_config) {
+  addCustomRoom(custom_room_config, io, socket) {
     if (!this.custom_rooms[custom_room_config.create_on]) {
       this.custom_rooms[custom_room_config.create_on] = [];
     }
-    this.custom_rooms[custom_room_config.create_on].push(new CustomRoom(custom_room_config));
+    this.custom_rooms[custom_room_config.create_on].push(new CustomRoom({
+      ...custom_room_config,
+      io,
+      socket,
+    }));
   }
 
   getCustomRoomsByEventName(event_name) {

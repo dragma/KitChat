@@ -1,7 +1,7 @@
 import User from '../data/user';
 import formatUser from './formatUser';
 
-const formatMessage = async (message) => {
+const formatMessage = async (message, io, socket) => {
   const formatedMessage = Object.assign({}, message);
 
   formatedMessage.message_id = message._id;
@@ -11,7 +11,7 @@ const formatMessage = async (message) => {
   delete formatedMessage._id;
 
   if (formatedMessage.user_id) {
-    const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u));
+    const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u, io, socket));
     formatedMessage.user = user;
     delete formatedMessage.user_id;
   }

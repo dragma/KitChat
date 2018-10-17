@@ -76,6 +76,7 @@ export default class Chat extends React.Component {
       .onTyping(isTyping => this.setState({ isTyping }))
       .onSetLastRead(this.client.getRooms)
       .onRoomCreated(room => this.onRoomCreated(room))
+      .onRefetchRooms(this.client.getRooms)
       .connect()
       .getUser()
       .getRooms();
@@ -93,7 +94,6 @@ export default class Chat extends React.Component {
   }
 
   saveRooms(rooms) {
-    console.log('SAVE ROOMS', rooms);
     let newRoom = null;
     const { newRoom: newStateRoom } = this.state;
     if (newStateRoom) {
@@ -121,7 +121,7 @@ export default class Chat extends React.Component {
     this.setState({ [key]: value });
   }
 
-  fetchMoreMessages(nb) {
+  fetchMoreMessages(nb = null) {
     const { room } = this.state;
     const { _options } = this.client;
     this.client.getRoom({
@@ -212,7 +212,7 @@ export default class Chat extends React.Component {
               <Room
                 room={room}
                 me={user}
-                fetchMore={this.fetchMoreMessages}
+                fetchMore={() => this.fetchMoreMessages()}
                 sendMessage={this.sendMessage}
                 isTyping={isTyping}
                 typing={this.typing}
