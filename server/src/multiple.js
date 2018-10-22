@@ -5,7 +5,7 @@ import moment from 'moment';
 import { createClusteredChatServer } from 'kitchat-server';
 
 import {
-  APP_PORT, MONGO_URI, JWT_SECRET, MAX_MESSAGE_SIZE,
+  APP_PORT, MONGO_URI, JWT_SECRET, MAX_MESSAGE_SIZE, REDIS_HOST, REDIS_PORT,
 } from './config';
 
 
@@ -91,6 +91,8 @@ const customRoomsGetter = {
 
 createClusteredChatServer(server, {
   mongo_uri: MONGO_URI,
+  redis_host: REDIS_HOST,
+  redis_port: REDIS_PORT,
   jwt_secret: JWT_SECRET,
   max_message_size: MAX_MESSAGE_SIZE,
   rules: customRules,
