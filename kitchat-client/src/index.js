@@ -150,6 +150,7 @@ class KitChatClient {
         query: { access_token: this._access_token },
         autoConnect: this._options.autoConnect,
     });
+    this.on('is_alive', () => this.socket.emit('is_alive'))
     return this._initiateAllListeners();
   }
 
@@ -185,6 +186,7 @@ KitChatClient.DEFAULT_LISTENER_ACTIONS = {
   get_rooms: KitChatClient.logger.on('get_rooms'),
   get_room: KitChatClient.logger.on('get_room'),
   refetch_rooms: KitChatClient.logger.on('refetch_rooms'),
+  is_alive: KitChatClient.logger.on('is_alive'),
 };
 
 KitChatClient.DEFAULT_OPIONS = {

@@ -1,5 +1,4 @@
 import formatUser from '../utils/formatUser';
-import findRooms from '../utils/findRooms';
 
 const timeouts = {};
 
@@ -17,17 +16,19 @@ const manageTyping = (socket, room_id) => {
 };
 
 const sendTyping = (io, socket, webhook) => async () => {
-  const roomsIds = findRooms(io, socket, 'room');
-  if (roomsIds && roomsIds.length) {
-    const room_id = roomsIds[0];
-    manageTyping(socket, room_id);
+  const room_id = socket.current_room_id;
 
-    if (webhook && typeof webhook === 'function') {
-      webhook({
-        user: formatUser(socket.user, io, socket),
-        room_id,
-      });
-    }
+  if (!room_id) {
+    return;
+  }
+
+  manageTyping(socket, room_id);
+
+  if (webhook && typeof webhook === 'function') {
+    webhook({
+      user: formatUser(socket.user, socket),
+      room_id,
+    });
   }
 };
 

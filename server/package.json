@@ -7,8 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/babel src -d dist",
     "build:watch": "./node_modules/.bin/babel src -d dist --watch",
-    "start:dev": "./node_modules/.bin/nodemon dist/index.js",
-    "dev": "./node_modules/.bin/concurrently -n build,server \" yarn build:watch\" \"yarn start:dev\""
+    "start:simple:dev": "./node_modules/.bin/nodemon dist/simple.js",
+    "start:multiple:dev": "./node_modules/.bin/nodemon dist/multiple.js",
+    "start:multiples:dev": "./node_modules/.bin/concurrently -n 8082,8081 -c green.bold,cyan.bold \"APP_PORT=8082 yarn start:multiple:dev\" \"APP_PORT=8081 yarn start:multiple:dev\"",
+    "dev:simple": "./node_modules/.bin/concurrently -n build,server \" yarn build:watch\" \"yarn start:simple:dev\"",
+    "dev:multiples": "./node_modules/.bin/concurrently -n build,server -c white.bold,magenta.bold \" yarn build:watch\" \"yarn start:multiples:dev\""
   },
   "repository": {
     "type": "git",

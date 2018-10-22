@@ -9,7 +9,7 @@ const updateUser = (io, socket, webhook) => async (data) => {
     .then((usr) => {
       getUser(io, socket)();
       if (webhook && typeof webhook === 'function') {
-        webhook({ user: formatUser(usr, io, socket) });
+        webhook({ user: formatUser(usr, socket) });
       }
       return usr;
     });

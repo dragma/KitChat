@@ -1,20 +1,13 @@
-function findRooms(io, socket, type) {
-  const returnedRooms = [];
-  const { rooms } = io.sockets.adapter;
+import Socket from '../data/socket';
 
-  const roomsIds = Object.keys(rooms)
-    .filter(roomId => roomId.split(`${type}:`).length > 1);
-
-  for (let i = 0; i < roomsIds.length; i += 1) {
-    const roomId = roomsIds[i];
-    if (roomId !== socket.id) {
-      const room = rooms[roomId];
-      if (room.sockets && room.sockets[socket.id]) {
-        returnedRooms.push(roomId);
+function findSocketRoom(socket) {
+  return Socket.getRoomId(socket.id)
+    .then((room_id) => {
+      if (!room_id) {
+        return null;
       }
-    }
-  }
-  return returnedRooms;
+      return room_id;
+    });
 }
 
-export default findRooms;
+export default findSocketRoom;

@@ -6,6 +6,8 @@ const UserSchema = new Schema({
   nickname: String,
   firstname: String,
   lastname: String,
+  online: Boolean,
+  active_rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room', index: true }],
 });
 
 

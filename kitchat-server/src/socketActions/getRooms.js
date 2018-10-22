@@ -23,7 +23,7 @@ const getRooms = (io, socket, webhook) => async () => {
 
   if (webhook && typeof webhook === 'function') {
     webhook({
-      user: formatUser(socket.user, io, socket),
+      user: formatUser(socket.user, socket),
       rooms,
     });
   }

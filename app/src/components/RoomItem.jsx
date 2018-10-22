@@ -2,13 +2,19 @@ import React from 'react';
 
 export default class RoomItem extends React.PureComponent {
   getRoomName() {
+    let roomName = '';
     if (this.props.room.name) {
-      return this.props.room.name;
+      roomName = this.props.room.name;
+    } else {
+      const userOnline = '';
+
+      roomName = this.props.room.users
+        .filter(u => u.user_id !== this.props.me.user_id)
+        .map(u => `${u.firstname} ${u.lastname}${u.online ? ' - (En ligne)' : ''}`)
+        .join(',');
     }
-    return this.props.room.users
-      .filter(u => u.user_id !== this.props.me.user_id)
-      .map(u => `${u.firstname} ${u.lastname}`)
-      .join(',');
+
+    return roomName;
   }
 
   render() {

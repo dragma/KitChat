@@ -23,7 +23,7 @@ const formatRoom = async (room, user_id, io, socket, options = {}) => {
   const messages = await Message.getByIds(messagesIds)
     .then(msgs => Promise.all(msgs.reverse().map(msg => formatMessage(msg, io, socket))));
   const users = await User.getByIds(room.users)
-    .then(usrs => Promise.all(usrs.map(u => formatUser(u, io, socket))));
+    .then(usrs => Promise.all(usrs.map(u => formatUser(u, socket))));
   formatedRoom.users = users;
   formatedRoom.messages = messages;
 

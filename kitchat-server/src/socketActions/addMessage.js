@@ -5,17 +5,11 @@ import Room from '../data/room';
 import setLastRead from './setLastRead';
 import formatMessage from '../utils/formatMessage';
 import formatUser from '../utils/formatUser';
-import findRooms from '../utils/findRooms';
 
 const addMessage = (io, socket, options, webhook) => async (data) => {
   console.log('[DATA] for add_message :', data);
 
-  const rooms = findRooms(io, socket, 'room');
-  let room_id = null;
-  if (rooms && rooms.length) {
-    [room_id] = rooms;
-    [, room_id] = room_id.split('room:');
-  }
+  const room_id = socket.current_room_id;
 
   const message = await Message.create({
     message: truncate(data.message, options.max_message_size),
@@ -47,7 +41,7 @@ const addMessage = (io, socket, options, webhook) => async (data) => {
   if (webhook && typeof webhook === 'function') {
     webhook({
       on: 'add_message',
-      user: formatUser(socket.user, io, socket),
+      user: formatUser(socket.user, socket),
       message,
       room_id,
     });

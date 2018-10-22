@@ -33,7 +33,7 @@ const createRoom = (io, socket, webhook) => async (data) => {
   if (!rooms.length) {
     if (webhook && typeof webhook === 'function') {
       webhook({
-        user: formatUser(socket.user, io, socket),
+        user: formatUser(socket.user, socket),
         room: formatedNewRoom,
       });
     }

@@ -32,6 +32,8 @@ const auth = jwt_secret => async (socket, next) => {
     }
   }
 
+  await User.update(socket.user._id, { online: true });
+
   next();
 };
 

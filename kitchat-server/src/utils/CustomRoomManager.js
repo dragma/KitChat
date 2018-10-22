@@ -26,7 +26,7 @@ class CustomRoom {
 
   async createRoom(user_id, io, socket) {
     const user = await User.getById(user_id)
-      .then(usr => formatUser(usr, io, socket));
+      .then(usr => formatUser(usr, socket));
     const rooms = await Room.getByUserId(user_id)
       .then(rms => Promise.all(rms.map(r => formatRoom(r, user_id, io, socket))));
 

@@ -2,7 +2,7 @@ import express from 'express';
 import { Server } from 'http';
 import moment from 'moment';
 
-import mountChatServer from 'kitchat-server';
+import { createSingleChatServer } from 'kitchat-server';
 
 import {
   APP_PORT, MONGO_URI, JWT_SECRET, MAX_MESSAGE_SIZE,
@@ -89,7 +89,7 @@ const customRoomsGetter = {
   })],
 };
 
-mountChatServer(server, {
+createSingleChatServer(server, {
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
   max_message_size: MAX_MESSAGE_SIZE,

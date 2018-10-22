@@ -11,7 +11,7 @@ const formatMessage = async (message, io, socket) => {
   delete formatedMessage._id;
 
   if (formatedMessage.user_id) {
-    const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u, io, socket));
+    const user = await User.getById(formatedMessage.user_id).then(u => formatUser(u, socket));
     formatedMessage.user = user;
     delete formatedMessage.user_id;
   }
