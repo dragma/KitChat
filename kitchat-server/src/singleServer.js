@@ -11,6 +11,7 @@ import CustomRoomManager from './utils/CustomRoomManager';
 import CustomRoomsGetterManager from './utils/CustomRoomsGettersManager';
 import eventLogger from './utils/eventLogger';
 import webhook from './utils/webhook';
+import connectMongo from './utils/connectMongo';
 
 // default options
 const defaultOptions = {
@@ -25,18 +26,6 @@ const defaultOptions = {
 
 // mogoose setup
 mongoose.Promise = bluebird;
-
-const connectMongo = (mongo_uri) => {
-  mongoose.connect(mongo_uri, {
-    useNewUrlParser: true,
-  });
-  mongoose.set('useCreateIndex', true);
-  mongoose.set('useFindAndModify', false);
-  const db = mongoose.connection;
-
-  db.on('error', console.error.bind(console, 'connection error'));
-  db.once('open', () => console.log('[INFO] Connected to Mongo'));
-};
 
 
 // Server & socket.io setup
@@ -55,6 +44,7 @@ const createSingleChatServer = (server, userOptions) => {
     .forEach(customRoom => CustomRoomManager.addCustomRoom(customRoom));
 
   const io = socketIo(server);
+
   CustomRoomsGetterManager.io = io;
 
   Object.keys(options.custom_rooms_getters)
