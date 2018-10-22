@@ -19,7 +19,7 @@ app.post('/webhooks', (req, res) => {
 
 const server = Server(app);
 
-server.listen(APP_PORT, () => console.log('[INFO] Server is listening on port', APP_PORT));
+app.listen(APP_PORT, () => console.log('[INFO] Server is listening on port', APP_PORT));
 
 /*
   available listeners :
@@ -97,6 +97,6 @@ createClusteredChatServer(server, {
   max_message_size: MAX_MESSAGE_SIZE,
   rules: customRules,
   webhooks: customWebhooks,
-  cutom_rooms: customRooms,
+  custom_rooms: customRooms,
   custom_rooms_getters: customRoomsGetter,
 });

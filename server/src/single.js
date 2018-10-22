@@ -95,6 +95,6 @@ createSingleChatServer(server, {
   max_message_size: MAX_MESSAGE_SIZE,
   rules: customRules,
   webhooks: customWebhooks,
-  cutom_rooms: customRooms,
+  custom_rooms: customRooms,
   custom_rooms_getters: customRoomsGetter,
 });
