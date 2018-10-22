@@ -125,7 +125,10 @@ const onConnection = (socket, {
     console.log(`user:${socket.user._id}`);
     User
       .update(socket.user._id, { online: false })
-      .then(() => io.to(`user:${socket.user._id}`).emit('is_alive'));
+      .then(() => {
+        console.log('[SEND] is_alive to room :', `user:${socket.user._id}`);
+        io.to(`user:${socket.user._id}`).emit('is_alive');
+      });
 
     CustomRoomManager
       .getCustomRoomsByEventName('disconnect')
