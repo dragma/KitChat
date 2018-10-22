@@ -20,13 +20,12 @@ const defaultOptions = {
   jwt_secret: JWT_SECRET,
   rules: {},
   webhooks: {},
-  cutom_rooms: [],
+  custom_rooms: [],
   custom_rooms_getters: {},
 };
 
 // mogoose setup
 mongoose.Promise = bluebird;
-
 
 // Server & socket.io setup
 const createSingleChatServer = (server, userOptions) => {
@@ -40,7 +39,7 @@ const createSingleChatServer = (server, userOptions) => {
   const makeHook = webhook(options.webhooks, options.jwt_secret);
 
   options
-    .cutom_rooms
+    .custom_rooms
     .forEach(customRoom => CustomRoomManager.addCustomRoom(customRoom));
 
   const io = socketIo(server);
