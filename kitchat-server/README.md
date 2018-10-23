@@ -1,5 +1,7 @@
 # KitChat server
 
+[![npm version](https://badge.fury.io/js/kitchat-server.svg)](https://badge.fury.io/js/kitchat-server)
+
 ## Introduction
 
 The idea of KitChat emerged when I wan searching for a free simple and powerfull chat client-server to integrate to my projects so I don't have to bother developping one.
