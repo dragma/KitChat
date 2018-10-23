@@ -1,4 +1,4 @@
-# kitchat-server
+# KitChat server
 
 ## Introduction
 
@@ -153,6 +153,104 @@ createSingleChatServer(server, {
   custom_rooms: customRooms,
   custom_rooms_getters: customRoomsGetter,
 });
-
-
 ```
+## Available listeners
+
+|name|description|
+|---|---|
+|`connection`|When a connection is made between the client and the server|
+|`get_user`|When user data is requested|
+|`update_user`|When user data is updated|
+|`create_room`|When room is requested to be created|
+|`get_room`|When room content is requested|
+|`get_rooms`|When rooms list is requested|
+|`set_active_room`|When room is requested to be the active one|
+|`typing`|When a user is typing|
+|`add_message`|When a message is requested to be added to the room|
+|`set_last_read`|When the current room is requested to be marked as read|
+ 
+## `createSingleChatServer` and `createClusteredChatServer` parameters
+
+Each of there two function takes an object in parameters
+
+|key|description|type|default|required|
+|---|---|---|---|---|
+|`jwt_secret`|String passed to jwt to decode the client's `access-token`| `String`|`shhhh`|**yes**|
+|`mongo_uri`|The connection url for your mongodb database|`String`|`mongodb://localhost/kitchat`|**yes**|
+|`max_message_size`|Maximum message characters|`Number`|`3000` |*no*|
+|`rules`|See custom rules description [below](#custom-rules).|`Object`|`{}`|*no*|
+|`webhooks`|See webhooks description [below](#webhooks)|`Object`|`{}`|*no*|
+
+### Custom rules
+
+|key|description|required|default|
+|---|---|---|---|
+|`rules_type`|`blacklist` or `whitelist`|**yes**|`null`|
+|`rules`|`{ role: ['array', 'of', 'available', 'listeners'] }`|**yes**|`null`|
+
+#### Example
+```javascript
+const rules = {
+  rules_type: 'blacklist',
+  rules: {
+    user: ['create_room'],
+    guest: ['create_room', 'get_rooms', 'add_message', 'update_user', 'typing']
+  },
+};
+```
+
+This sample means that :
+
+- The socket identified as a `user` won't have the permission to use the `create-room` event (and won't be able to create a room). 
+- The socket identified as `guest` will not be able to create a room, list all rooms, add a message to a room, update its user values.
+
+### Webhooks
+
+When a event is triggered, a call to a special location can be made with some detailed informations.
+
+You can trigger webhooks on all [available listeners](#available-listeners). 
+
+|key|value|required|
+|---|---|---|
+|`default`|[configuration object](#webhook-configuration)|*no*|
+|any [available listeners](#available-listeners)|`true` or [configuration object](#webhook-configuration)|*no*|
+
+When the value is set tu `true`, the default object will be used.
+ 
+#### Webhook configuration
+
+ |key|description|
+ |---|---|
+ |`url`|destination base url|
+ |`route`|suffixes the url|
+
+> You can only fill one of the two fields. In case of a missing field, default will be used.
+
+#### Example 
+
+```javascript
+const customWebhooks = {
+  default: {
+    url: `http://mywebsite.com`,
+    route: '/webhooks',
+  },
+  connection: true,
+  add_message: {
+    route: '/webhooks/add-message',
+  },
+  create_room: {
+    url: `http://alternativewebsite.com`,
+    route: '/on-room-created',
+  },
+  update_user: {
+    url: `http://alternativewebsite.com`,
+  },
+};
+ ```
+
+ In this case :
+
+ - On `connection`, the server will hit `http://mywebsite.com/webhooks`
+ - On `add_message`, the server will hit `http://mywebsite.com/webhooks/add-message`
+ - On `create_room`, the server will hit `http://alternativewebsite.com/on-room-created`
+ - On `update_user`, the server will hit `http://alternativewebsite.com/webhooks`
