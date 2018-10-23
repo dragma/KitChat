@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/babel src -d dist",
-    "build:watch": "./node_modules/.bin/babel src -d dist --watch"
+    "build:watch": "./node_modules/.bin/babel src -d dist --watch",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "chat",
