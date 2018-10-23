@@ -1,6 +1,6 @@
 {
   "name": "kitchat-server",
-  "version": "0.0.0-alpha-0.1",
+  "version": "0.0.0-alpha-0.1.1",
   "description": "kitchat server",
   "main": "dist/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/dragma/KitChat/issues"
   },
-  "homepage": "https://github.com/dragma/KitChat/kitchat-server#readme",
+  "homepage": "https://github.com/dragma/KitChat/tree/master/kitchat-server#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "3.5.2",

@@ -1,6 +1,6 @@
 {
   "name": "kitchat-client",
-  "version": "0.0.0-alpha-0.1",
+  "version": "0.0.0-alpha-0.1.1",
   "description": "kitchat socketio client",
   "main": "dist/index.js",
   "dependencies": {
@@ -28,5 +28,5 @@
   "bugs": {
     "url": "https://github.com/dragma/KitChat/issues"
   },
-  "homepage": "https://github.com/dragma/KitChat/kitchat-client#readme"
+  "homepage": "https://github.com/dragma/KitChat/tree/master/kitchat-client#readme"
 }
