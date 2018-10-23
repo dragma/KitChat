@@ -1,6 +1,6 @@
 {
   "name": "kitchat-client",
-  "version": "0.0.1",
+  "version": "0.0.0-alpha-0.1",
   "description": "kitchat socketio client",
   "main": "dist/index.js",
   "dependencies": {
@@ -16,7 +16,8 @@
   "scripts": {
     "build": "./node_modules/.bin/babel src -d dist",
     "build:watch": "./node_modules/.bin/babel src -d dist --watch",
-    "build:app:watch": "./node_modules/.bin/babel src -d ../app/src/KitChat-client --watch"
+    "build:app:watch": "./node_modules/.bin/babel src -d ../app/src/KitChat-client --watch",
+    "prepublishOnly": "npm run build"
   },
   "author": "Florent Béjina",
   "license": "ISC",
@@ -27,5 +28,5 @@
   "bugs": {
     "url": "https://github.com/dragma/KitChat/issues"
   },
-  "homepage": "https://github.com/dragma/KitChat#readme"
+  "homepage": "https://github.com/dragma/KitChat/kitchat-client#readme"
 }

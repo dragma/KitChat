@@ -1,6 +1,6 @@
 {
   "name": "kitchat-server",
-  "version": "0.0.1",
+  "version": "0.0.0-alpha-0.1",
   "description": "kitchat server",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,15 @@
     "mongodb"
   ],
   "author": "Florent Béjina",
-  "license": "MIT",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragma/KitChat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dragma/KitChat/issues"
+  },
+  "homepage": "https://github.com/dragma/KitChat/kitchat-server#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "3.5.2",
