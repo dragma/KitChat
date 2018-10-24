@@ -34,7 +34,7 @@ app.listen(APP_PORT, () => console.log('[INFO] Server is listening on port', APP
     'set_last_read'
 */
 const customRules = {
-  rules_type: 'blacklist', // or whitelist
+  whitelist: false,
   rules: {
     user: ['create_room'],
   },
@@ -90,6 +90,7 @@ const customRoomsGetter = {
 };
 
 createClusteredChatServer(server, {
+  debug: true,
   mongo_uri: MONGO_URI,
   redis_host: REDIS_HOST,
   redis_port: REDIS_PORT,

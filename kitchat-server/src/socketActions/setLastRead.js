@@ -1,8 +1,10 @@
 import Room from '../data/room';
 import formatUser from '../utils/formatUser';
+import log from '../utils/logger';
+
 
 const setLastRead = (io, socket, webhook) => async (data = {}) => {
-  console.log('[DATA] for set_last_read :', data);
+  log('[DATA] for set_last_read :', data);
 
   const room_id = socket.current_room_id;
 

@@ -1,6 +1,8 @@
-const logger = (name, action) => (data) => {
-  console.log('[EVENT] on', name);
+import log from './logger';
+
+const eventLogger = (name, action) => (data) => {
+  log('[EVENT] on', name);
   return action(data);
 };
 
-export default logger;
+export default eventLogger;

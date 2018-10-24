@@ -10,6 +10,7 @@ import {
 import auth from './socketActions/auth';
 import onConnection from './socketActions/onConnection';
 
+import { init as initLogger } from './utils/logger';
 import eventLogger from './utils/eventLogger';
 import CustomRoomManager from './utils/CustomRoomManager';
 import CustomRoomsGetterManager from './utils/CustomRoomsGettersManager';
@@ -18,6 +19,7 @@ import connectMongo from './utils/connectMongo';
 
 // default options
 const defaultOptions = {
+  debug: true,
   max_message_size: MAX_MESSAGE_SIZE,
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
@@ -41,6 +43,8 @@ const createClusteredChatServer = (server, userOptions) => {
   };
 
   connectMongo(options.mongo_uri);
+
+  initLogger(options.debug);
 
   const makeHook = webhook(options.webhooks, options.jwt_secret);
 

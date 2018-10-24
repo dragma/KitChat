@@ -7,6 +7,7 @@ import { MAX_MESSAGE_SIZE, MONGO_URI, JWT_SECRET } from './config';
 import auth from './socketActions/auth';
 import onConnection from './socketActions/onConnection';
 
+import { init as initLogger } from './utils/logger';
 import CustomRoomManager from './utils/CustomRoomManager';
 import CustomRoomsGetterManager from './utils/CustomRoomsGettersManager';
 import eventLogger from './utils/eventLogger';
@@ -15,6 +16,7 @@ import connectMongo from './utils/connectMongo';
 
 // default options
 const defaultOptions = {
+  debug: true,
   max_message_size: MAX_MESSAGE_SIZE,
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
@@ -34,7 +36,11 @@ const createSingleChatServer = (server, userOptions) => {
     ...userOptions,
   };
 
+  console.log('options', options);
+
   connectMongo(options.mongo_uri);
+
+  initLogger(options.debug);
 
   const makeHook = webhook(options.webhooks, options.jwt_secret);
 

@@ -2,10 +2,11 @@ import User from '../data/user';
 import Room from '../data/room';
 import formatRoom from '../utils/formatRoom';
 import formatUser from '../utils/formatUser';
+import log from '../utils/logger';
 
 
 const createRoom = (io, socket, webhook) => async (data) => {
-  console.log('[DATA] for create_room :', data);
+  log('[DATA] for create_room :', data);
   const roomData = {
     users: [],
   };
@@ -39,7 +40,7 @@ const createRoom = (io, socket, webhook) => async (data) => {
     }
   }
 
-  console.log('[SEND] room_created to room :', `user:${socket.user._id}`);
+  log('[SEND] room_created to room :', `user:${socket.user._id}`);
   io.to(`user:${socket.user._id}`).emit('room_created', formatedNewRoom);
 };
 

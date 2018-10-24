@@ -34,7 +34,7 @@ server.listen(APP_PORT, () => console.log('[INFO] Server is listening on port', 
     'set_last_read'
 */
 const customRules = {
-  rules_type: 'blacklist', // or whitelist
+  whitelist: false,
   rules: {
     user: ['create_room'],
   },
@@ -90,6 +90,7 @@ const customRoomsGetter = {
 };
 
 createSingleChatServer(server, {
+  debug: true,
   mongo_uri: MONGO_URI,
   jwt_secret: JWT_SECRET,
   max_message_size: MAX_MESSAGE_SIZE,

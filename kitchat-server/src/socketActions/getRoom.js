@@ -1,9 +1,11 @@
 import Room from '../data/room';
 import formatRoom from '../utils/formatRoom';
 import formatUser from '../utils/formatUser';
+import log from '../utils/logger';
+
 
 const getRoom = (io, socket, webhook) => async (data) => {
-  console.log('[DATA] for get_room :', data);
+  log('[DATA] for get_room :', data);
   // GET SOCKET ROOMS
   const room_id = socket.current_room_id;
 
@@ -21,7 +23,7 @@ const getRoom = (io, socket, webhook) => async (data) => {
     { nb_messages: data.nb_messages || 1 },
   );
 
-  console.log('[SEND] get_room to socket :', socket.id);
+  log('[SEND] get_room to socket :', socket.id);
   socket.emit('get_room', formatedRoom);
 
   if (webhook && typeof webhook === 'function') {

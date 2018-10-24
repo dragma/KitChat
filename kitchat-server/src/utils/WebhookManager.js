@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import request from 'axios';
 import uuid from 'uuid';
 
+import log from './logger';
+
 class WebHookRequest {
   constructor({
     url, data, Manager, secret, config, on,
@@ -28,14 +30,14 @@ class WebHookRequest {
       Manager, id, url, signedData, config, on,
     } = this;
     await this.sign();
-    console.log('[HOOK] send', on, 'to', url);
+    log('[HOOK] send', on, 'to', url);
     request
       .post(url, signedData, config)
       .then(() => {
         Manager.removeRequest(id);
       })
       .catch((err) => {
-        console.log('ERROR', err);
+        log('ERROR', err);
         Manager.removeRequest(id);
       });
     return Manager;

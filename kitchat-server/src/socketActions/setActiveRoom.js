@@ -1,7 +1,9 @@
 import formatUser from '../utils/formatUser';
+import log from '../utils/logger';
+
 
 const setActiveRoom = (io, socket, webhook) => async (data) => {
-  console.log('[DATA] for set_active_room :', data);
+  log('[DATA] for set_active_room :', data);
 
   const roomId = socket.current_room_id;
 
@@ -11,7 +13,7 @@ const setActiveRoom = (io, socket, webhook) => async (data) => {
   socket.join(`room:${data.room_id}`);
   socket.current_room_id = data.room_id;
 
-  console.log('[SEND] set_active_room to socket :', socket.id);
+  log('[SEND] set_active_room to socket :', socket.id);
   socket.emit('set_active_room');
 
   if (webhook && typeof webhook === 'function') {

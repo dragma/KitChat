@@ -3,6 +3,8 @@ import Room from '../data/room';
 import formatRoom from '../utils/formatRoom';
 import formatUser from '../utils/formatUser';
 import CustomRoomsGettersManager from '../utils/CustomRoomsGettersManager';
+import log from '../utils/logger';
+
 
 const getRooms = (io, socket, webhook) => async () => {
   let rooms = await Room
@@ -18,7 +20,7 @@ const getRooms = (io, socket, webhook) => async () => {
     rooms = uniqby(rooms, room => room.room_id.toString());
   }
 
-  console.log('[SEND] get_rooms to room :', `user:${socket.user._id}`);
+  log('[SEND] get_rooms to room :', `user:${socket.user._id}`);
   io.to(`user:${socket.user._id}`).emit('get_rooms', rooms);
 
   if (webhook && typeof webhook === 'function') {

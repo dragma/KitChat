@@ -1,9 +1,10 @@
 import User from '../data/user';
 import getUser from './getUser';
 import formatUser from '../utils/formatUser';
+import log from '../utils/logger';
 
 const updateUser = (io, socket, webhook) => async (data) => {
-  console.log('[DATA] for update_user :', data);
+  log('[DATA] for update_user :', data);
   return User
     .update(socket.user._id, data)
     .then((usr) => {

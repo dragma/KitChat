@@ -11,6 +11,8 @@ import setLastRead from './setLastRead';
 import CustomRoomManager from '../utils/CustomRoomManager';
 import formatUser from '../utils/formatUser';
 import hasAccess from '../utils/hasAccess';
+import log from '../utils/logger';
+
 
 import User from '../data/user';
 
@@ -18,7 +20,7 @@ import User from '../data/user';
 const onConnection = (socket, {
   io, makeHook, logger, options,
 }) => {
-  console.log('a user connected', socket.id);
+  log('a user connected', socket.id);
 
   socket.join(`user:${socket.user._id}`);
 
@@ -122,18 +124,18 @@ const onConnection = (socket, {
     }
 
     // manage online / offline
-    console.log(`user:${socket.user._id}`);
+    log(`user:${socket.user._id}`);
     User
       .update(socket.user._id, { online: false })
       .then(() => {
-        console.log('[SEND] is_alive to room :', `user:${socket.user._id}`);
+        log('[SEND] is_alive to room :', `user:${socket.user._id}`);
         io.to(`user:${socket.user._id}`).emit('is_alive');
       });
 
     CustomRoomManager
       .getCustomRoomsByEventName('disconnect')
       .map(CustomRoom => CustomRoom.createRoom(socket.user._id, io, socket));
-    console.log('a user disconnected');
+    log('a user disconnected');
     socket.disconnect(true);
   }));
 };

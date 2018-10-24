@@ -1,3 +1,4 @@
+import log from './logger';
 import User from '../data/user';
 import Room from '../data/room';
 import Message from '../data/message';
@@ -37,7 +38,7 @@ class CustomRoom {
     }
     const roomData = this.room_data(user, rooms);
     const room = await Room.create(roomData).then((r) => {
-      console.log('[CUSTOM ROOM] custom room created with data :', JSON.stringify(roomData));
+      log('[CUSTOM ROOM] custom room created with data :', JSON.stringify(roomData));
       return r;
     });
     if (this.build_first_message) {
@@ -46,7 +47,7 @@ class CustomRoom {
         room_id: room._id,
       };
       await Message.create(messageData);
-      console.log('[CUSTOM ROOM] first message inserted with data :', JSON.stringify(messageData));
+      log('[CUSTOM ROOM] first message inserted with data :', JSON.stringify(messageData));
     }
     return true;
   }
